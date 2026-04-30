@@ -1,0 +1,232 @@
+import { Mail, Lock, Eye, EyeOff, Loader, ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useTask } from "../hooks/useTask";
+import { useAuth } from "../hooks/useAuth";
+import z from "zod";
+import Alert from "../components/Alert";
+import { useUser } from "../hooks/useUser";
+import { API_BASE_URL } from "../config/api";
+
+// zod schema for validation
+const loginSchema = z.object({
+  email: z.string().email("Invalid email format").transform((email) => email.toLowerCase()),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .max(25, "Password cannot exceed 25 characters"),
+});
+
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const { fetchUser } = useUser();
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const { setOpenAlert, setAlertDetails, alertDetails } = useTask();
+
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    };
+
+    const validation = loginSchema.safeParse(data);
+
+    if (!validation.success) {
+      const newErrors: { [key: string]: string } = {};
+      validation.error.issues.forEach((err) => {
+        if (err.path[0]) {
+          newErrors[err.path[0] as string] = err.message;
+        }
+      });
+
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const result = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      if (!result.ok) {
+        const errorData = await result.json().catch(() => ({}));
+        setAlertDetails({
+          type: "error",
+          message: errorData.error || "An error occurred during login. Please try again.",
+        });
+        setOpenAlert(true);
+        return;
+      }
+
+      setOpenAlert(true);
+      setAlertDetails({
+        type: "success",
+        message: "Login successful!",
+      });
+
+      // Refetch user after successful login before navigating
+      await fetchUser();
+      navigate("/");
+
+    } catch (err) {
+      console.error("Network Error:", err);
+      setOpenAlert(true);
+      setAlertDetails({
+        type: "error",
+        message: "Network error. Please check your connection and try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+
+  };
+
+
+  // redirect to dashboard if already logged in
+  const { isLoggedIn } = useAuth();
+
+  if (isLoggedIn) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return (
+    <div className="min-h-screen bg-linear-to-br from-background to-muted flex items-center justify-center p-4">
+
+      {/* alert */}
+      <Alert details={alertDetails} />
+      {/* Back Button */}
+      <Link
+        to='/'
+        className="absolute top-4 left-4 md:top-6 md:left-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ArrowLeft size={20} />
+        <span className="hidden sm:inline">Back</span>
+      </Link>
+
+      {/* Main Card */}
+      <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300">
+        {/* Header with gradient */}
+        <div className="p-6 bg-linear-to-br from-primary/10 via-accent/5 to-transparent border-b border-border">
+          <div className="text-center">
+            <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
+              Log in to continue
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Welcome back! Please enter your details
+            </p>
+          </div>
+        </div>
+
+        {/* Form Content */}
+        <div className="p-6 sm:p-8">
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* Email Field */}
+            <div>
+              <label htmlFor="email" className="form-overlay-label">
+                <div className="flex items-center gap-2">
+                  <Mail size={16} className="text-primary" />
+                  Email Address
+                </div>
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="example@gmail.com"
+                className={`form-overlay-input transition-colors ${errors.email
+                  ? "border-destructive focus:ring-destructive"
+                  : "border-border focus:ring-primary"
+                  }`}
+              />
+              {errors.email && (
+                <p className="text-xs text-destructive mt-1.5">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <label htmlFor="password" className="form-overlay-label">
+                <div className="flex items-center gap-2">
+                  <Lock size={16} className="text-primary" />
+                  Password
+                </div>
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="At least 6 characters"
+                  className={`form-overlay-input pr-10 transition-colors ${errors.password
+                    ? "border-destructive focus:ring-destructive"
+                    : "border-border focus:ring-primary"
+                    }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-xs text-destructive mt-1.5">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full mt-8 py-3 px-4 bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Loader size={18} className="animate-spin" />
+                  Signing In...
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </button>
+          </form>
+
+          {/* Footer */}
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="text-primary hover:text-primary/80 hover:underline font-semibold transition-colors"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Accent Line */}
+        <div className="h-1 bg-linear-to-r from-primary/50 via-accent/50 to-transparent"></div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;

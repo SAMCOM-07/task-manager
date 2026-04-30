@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-green: var(--green);
+  --color-orange: var(--orange);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+}
+
+
+:root {
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.18 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0 0);
+  --border: oklch(0.92 0 0);
+  --input: oklch(0.94 0 0);
+  --ring: oklch(0.55 0 0);
+  --primary: oklch(0.55 0.2 260);
+  --primary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.94 0 0);
+  --muted-foreground: oklch(0.55 0 0);
+  --accent: oklch(95.513% 0.00854 197.715);
+  --accent-foreground: oklch(0.25 0 0);
+  --destructive: oklch(0.62 0.23 25);
+  --green: oklch(74.986% 0.1556 158.954);
+  --orange: oklch(80.336% 0.17038 73.785);
+}
+
+.dark {
+  --background: oklch(21% .034 264.665);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.2 0 0);
+  --card-foreground: oklch(0.95 0 0);
+  --border: oklch(31.124% 0.01033 216.964);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.6 0 0);
+  --primary: oklch(0.7 0.2 260);
+  --primary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(26.065% 0.03657 272.363 / 0.997);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.7 0.2 25);
+  --green: oklch(74.986% 0.1556 158.954);
+  --orange: oklch(80.336% 0.17038 73.785);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  scroll-behavior: smooth;
+}
+
+
+@layer base {
+
+  button,
+  select {
+    @apply cursor-pointer outline-ring;
+  }
+}
+
+@layer utilities {
+  .hover-scale {
+    @apply transition-transform duration-200;
+  }
+
+  .hover-scale:hover {
+    @apply scale-110;
+  }
+
+  .form-overlay-label {
+    @apply block font-medium text-muted-foreground mb-2;
+  }
+
+  .form-overlay-input {
+    @apply bg-accent w-full border border-border rounded-lg p-2.5 focus:ring-primary/50 focus:ring-2 focus:outline-none;
+  }
+
+  .loading-spinner {
+    @apply w-4 h-4 mx-auto border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin
+  }
+
+  .password-input {
+    @apply w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground outline-ring focus:border-primary transition-colors
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted-foreground);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+tr ::-webkit-scrollbar {
+  display: none;
+}
