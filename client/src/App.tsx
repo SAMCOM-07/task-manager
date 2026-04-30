@@ -2,17 +2,20 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import FormOverlay from "./components/FormOverlay";
+import TaskDetailsModal from "./components/TaskDetailsModal";
 import { useTask } from "./hooks/useTask";
 import Alert from "./components/Alert";
 
 export default function AppLayout() {
 
-  const { openFormOverlay, alertDetails } = useTask()
+  const { openFormOverlay, alertDetails, openDetailsModal, selectedTask } = useTask()
 
   return (
     <div className="flex h-screen relative">
 
       <Alert details = {alertDetails}/>
+
+      {openDetailsModal && <TaskDetailsModal task={selectedTask} />}
 
       {openFormOverlay && <div className="fixed inset-0 z-1000">
         <FormOverlay />

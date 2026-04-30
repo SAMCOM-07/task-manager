@@ -46,7 +46,10 @@ export const DeleteButton = ({ id }: { id: string | undefined }) => {
     <>
       {loadingDelete ? <div className="loading-spinner"></div> :
         <button
-          onClick={() => handleDelete()}
+          onClick={(e) => {
+            e.stopPropagation()
+            handleDelete()
+          }}
           className="hover-scale text-destructive" > <Trash2 size={20} />
         </button >}
     </>

@@ -1,6 +1,6 @@
 import { Mail, Lock, User, Eye, EyeOff, Loader, ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useTask } from "../hooks/useTask";
 import Alert from "../components/Alert";
@@ -15,6 +15,15 @@ const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setOpenAlert, setAlertDetails, alertDetails } = useTask();
   const { fetchUser } = useUser();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    fetchUser();
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [navigate, user, fetchUser]);
+
 
   // zod schema for validation
 
@@ -89,9 +98,11 @@ const RegisterPage = () => {
         message: "Account created successfully!",
       });
 
-      // Refetch user after successful registration before navigating
-      await fetchUser();
       navigate("/");
+
+      setTimeout(() => {
+        fetchUser();
+      }, 500)
 
     } catch (err) {
       console.error("Network Error:", err);
@@ -105,12 +116,6 @@ const RegisterPage = () => {
     }
 
   };
-
-  const { isLoggedIn } = useAuth();
-
-  if (isLoggedIn) {
-    return <Navigate to="/dashboard" replace />;
-  }
 
   return (
     <div className="min-h-screen bg-linear-to-br from-background to-muted flex items-center justify-center p-4">

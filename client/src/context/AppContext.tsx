@@ -12,6 +12,8 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<TaskType[]>([])
   const [loadingTasks, setLoadingTasks] = useState(false);
   const [editDetails, setEditDetails] = useState<TaskType | null>(null)
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertDetails, setAlertDetails] = useState({ type: "", message: "" });
 
@@ -114,6 +116,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         setTasks,
         editDetails,
         setEditDetails,
+        openDetailsModal,
+        setOpenDetailsModal,
+        selectedTask,
+        setSelectedTask,
         openAlert,
         setOpenAlert,
         alertDetails,

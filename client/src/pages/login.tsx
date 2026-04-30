@@ -1,6 +1,6 @@
 import { Mail, Lock, Eye, EyeOff, Loader, ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useTask } from "../hooks/useTask";
 import { useAuth } from "../hooks/useAuth";
 import z from "zod";
@@ -24,6 +24,14 @@ const LoginPage = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const { setOpenAlert, setAlertDetails, alertDetails } = useTask();
+  const { user } = useAuth();
+
+  useEffect(() => {
+      fetchUser();
+      if (user) {
+        navigate("/dashboard");
+      }
+    }, [navigate, user, fetchUser]);
 
 
   // Handle form submission
@@ -97,13 +105,6 @@ const LoginPage = () => {
 
   };
 
-
-  // redirect to dashboard if already logged in
-  const { isLoggedIn } = useAuth();
-
-  if (isLoggedIn) {
-    return <Navigate to="/dashboard" replace />;
-  }
 
   return (
     <div className="min-h-screen bg-linear-to-br from-background to-muted flex items-center justify-center p-4">

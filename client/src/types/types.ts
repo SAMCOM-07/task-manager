@@ -28,6 +28,10 @@ export type TaskContextType = {
   setOpenFormOverlay: React.Dispatch<React.SetStateAction<boolean>>;
   editDetails: TaskType | null;
   setEditDetails: React.Dispatch<React.SetStateAction<TaskType | null>>;
+  openDetailsModal: boolean;
+  setOpenDetailsModal: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedTask: TaskType | null;
+  setSelectedTask: React.Dispatch<React.SetStateAction<TaskType | null>>;
   openAlert: boolean;
   setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   alertDetails: { type: string; message: string };

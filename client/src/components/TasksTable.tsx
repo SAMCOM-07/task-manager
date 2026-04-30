@@ -5,7 +5,7 @@ import { DeleteButton } from "./ActionButtons";
 
 const TasksTable = () => {
 
-  const { tasks, loadingTasks, setOpenFormOverlay, setEditDetails } = useTask();
+  const { tasks, loadingTasks, setOpenFormOverlay, setEditDetails, setOpenDetailsModal, setSelectedTask } = useTask();
 
   return (
     <div className="overflow-auto rounded-lg border border-border shadow-sm">
@@ -32,8 +32,15 @@ const TasksTable = () => {
           {tasks && tasks.length > 0 ? [...tasks].reverse().map((task) => {
             const overdue = new Date(task.due_date) < new Date() && task.status !== 'completed'
             return (
-              <tr key={task.id} className="border-b border-border hover:bg-accent/30 transition-colors">
-                <td className="px-6 py-4 max-w-xs min-w-xs  w-full">
+              <tr 
+                key={task.id} 
+                className="border-b border-border hover:bg-accent/30 transition-colors cursor-pointer"
+                onClick={() => {
+                  setSelectedTask(task)
+                  setOpenDetailsModal(true)
+                }}
+              >
+                <td className="px-6 py-4 max-w-xs min-w-xs w-full">
                   <span>{task.title}</span>
                   <span className="block text-muted-foreground overflow-x-scroll mt-2 text-sm">{task.description}</span>
                 </td>
@@ -46,18 +53,24 @@ const TasksTable = () => {
                 <td className="px-6 py-4 mt-4 flex items-center gap-4 text-foreground hover:text-foreground/70 cursor-pointer">
 
                   {/* task edit button */}
-                  <button className="hover-scale text-primary" onClick={() => {
-                    setOpenFormOverlay(true)
-                    setEditDetails({
-                      id: task.id,
-                      title: task.title,
-                      description: task.description,
-                      priority: task.priority,
-                      status: task.status,
-                      category: task.category,
-                      due_date: task.due_date
-                    })
-                  }}><EditIcon size={20} /></button>
+                  <button 
+                    className="hover-scale text-primary" 
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setOpenFormOverlay(true)
+                      setEditDetails({
+                        id: task.id,
+                        title: task.title,
+                        description: task.description,
+                        priority: task.priority,
+                        status: task.status,
+                        category: task.category,
+                        due_date: task.due_date
+                      })
+                    }}
+                  >
+                    <EditIcon size={20} />
+                  </button>
 
                   {/* task delete button */}
                   <DeleteButton id={task.id} />
