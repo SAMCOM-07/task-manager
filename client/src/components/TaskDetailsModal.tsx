@@ -81,7 +81,7 @@ const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
     <div
       className="fixed inset-0 z-200 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
     >
-      <div ref={modalRef} className="bg-card/70 backdrop-blur-xs rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border">
+      <div ref={modalRef} className="bg-card rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border">
         {/* Header */}
         <div className="sticky top-0 flex items-center justify-between p-6 border-b border-border bg-card">
           <div className="flex-1">

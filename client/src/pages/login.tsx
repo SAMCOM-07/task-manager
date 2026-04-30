@@ -89,7 +89,7 @@ const LoginPage = () => {
 
       setTimeout(() => {
         fetchUser();
-      }, 500)
+      }, 1000)
 
 
     } catch (err) {
