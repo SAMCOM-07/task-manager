@@ -77,10 +77,12 @@ const LoginPage = () => {
         type: "success",
         message: "Login successful!",
       });
-
-      // Refetch user after successful login before navigating
-      await fetchUser();
       navigate("/");
+
+      setTimeout(() => {
+        fetchUser();
+      }, 500)
+
 
     } catch (err) {
       console.error("Network Error:", err);

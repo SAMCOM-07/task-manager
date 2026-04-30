@@ -15,7 +15,7 @@ const ProtectedLayout = () => {
 
   if (isLoadingUser) return <LoadingPage />;
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isLoadingUser) {
     return <Navigate to="/login" replace />;
   }
 
