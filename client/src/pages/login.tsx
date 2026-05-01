@@ -27,11 +27,11 @@ const LoginPage = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-      fetchUser();
-      if (user) {
-        navigate("/dashboard");
-      }
-    }, [navigate, user, fetchUser]);
+    fetchUser();
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [navigate, user, fetchUser]);
 
 
   // Handle form submission
@@ -89,7 +89,7 @@ const LoginPage = () => {
 
       setTimeout(() => {
         fetchUser();
-      }, 1000)
+      }, 300)
 
 
     } catch (err) {

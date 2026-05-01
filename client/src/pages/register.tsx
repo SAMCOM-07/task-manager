@@ -102,7 +102,7 @@ const RegisterPage = () => {
 
       setTimeout(() => {
         fetchUser();
-      }, 1000)
+      }, 300)
 
     } catch (err) {
       console.error("Network Error:", err);
