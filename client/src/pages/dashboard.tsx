@@ -1,4 +1,4 @@
-import { ChevronRight, FileCheck, OctagonAlert, RectangleEllipsis, SquareCheckBig } from "lucide-react";
+import { AlertCircle, ChevronRight, FileCheck, OctagonAlert, RectangleEllipsis, SquareCheckBig } from "lucide-react";
 import { useTask } from "../hooks/useTask";
 import TaskPieChart from "../components/PieChart";
 import { Link } from "react-router-dom";
@@ -76,21 +76,28 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-2">
             {loadingTasks ? (
               <div className="text-center py-36 text-muted-foreground"><span className="animate-pulse">Loading tasks . . .</span></div>
-            ) : tasks && tasks.length > 0 ? [...tasks].reverse().slice(0, 4).map((task) => (
-              <div key={task.id} className="border border-border rounded-md p-4 hover:bg-accent/30 transition-colors flex items-center justify-between gap-2">
-                <div className="space-y-2">
-                  <h4 className="font-semibold">{task.title}</h4>
-                  <p className="text-sm text-muted-foreground max-w-[80%] leading-3.5">{task.description}</p>
-                  <span className={cn('capitalize text-sm', 'px-3 py-1 rounded-full', task.priority === 'high' ? "text-red-600 bg-red-400/20" : task.priority === 'medium' ? "text-orange bg-orange/20" : "text-green bg-green/20")}>{task.priority}</span>
+            ) : tasks && tasks.length > 0 ? [...tasks].reverse().slice(0, 4).map((task) => {
+              const overdue = new Date(task.due_date) < new Date() && task.status !== 'completed';
+              return (
+                <div key={task.id} className="border border-border rounded-md p-4 hover:bg-accent/30 transition-colors flex items-center justify-between gap-2">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">{task.title}</h4>
+                    <p className="text-sm text-muted-foreground line-clamp-2 max-w-[80%] leading-3.5">{task.description}</p>
+                    <span className={cn('capitalize text-sm', 'px-3 py-1 rounded-full', task.priority === 'high' ? "text-red-600 bg-red-400/20" : task.priority === 'medium' ? "text-orange bg-orange/20" : "text-green bg-green/20")}>{task.priority}</span>
+                  </div>
+                  <div className="text-sm flex flex-col items-end gap-1">
+                    <p className={cn("capitalize text-nowrap px-3 py-1 rounded-full", task.status === 'completed' ? 'bg-green/20 text-green' : task.status === 'in_progress' ? 'bg-orange/20 text-orange' : 'bg-primary/20 text-primary')}>{task.status === 'in_progress' ? 'In Progress' : task.status}</p>
+                    <span className={cn("text-xs text-nowrap flex flex-col items-end gap-1", overdue ? "text-destructive" : "text-muted-foreground")}>Due: {new Date(task.due_date).toLocaleDateString("en-GB", {
+                      day: "2-digit", month: "short", year: "numeric",
+                    })} {overdue && <span className="flex items-center text-destructive gap-1 text-xs font-bold animate-pulse">
+                      <AlertCircle size={14} />
+                      OVERDUE
+                    </span>}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-sm flex flex-col items-end gap-1">
-                  <p className={cn("capitalize text-nowrap px-3 py-1 rounded-full", task.status === 'completed' ? 'bg-green/20 text-green' : task.status === 'in_progress' ? 'bg-orange/20 text-orange' : 'bg-primary/20 text-primary')}>{task.status === 'in_progress' ? 'In Progress' : task.status}</p>
-                  <span className="text-xs text-muted-foreground text-nowrap">Due: {new Date(task.due_date).toLocaleDateString("en-GB", {
-                    day: "2-digit", month: "short", year: "numeric",
-                  })} {new Date(task.due_date) < new Date() && task.status !== 'completed' && <span className="block text-end text-destructive mt-1 animate-pulse ml-2 text-xs font-bold">OVERDUE</span>}</span>
-                </div>
-              </div>
-            )) : (
+              )
+            }) : (
               <div className="text-center py-12 text-muted-foreground">No tasks found. Create your first task!</div>
             )}
           </div>

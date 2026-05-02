@@ -13,7 +13,7 @@ export default function AppLayout() {
   return (
     <div className="flex h-screen relative">
 
-      <Alert details = {alertDetails}/>
+      <Alert details={alertDetails} />
 
       {openDetailsModal && <TaskDetailsModal task={selectedTask} />}
 
@@ -22,12 +22,11 @@ export default function AppLayout() {
       </div>}
       <Sidebar />
       <main className="flex-1 overflow-auto relative">
-        <nav className="sticky top-0 left-0 right-0 z-10"><Navbar /></nav>
+        <nav className="sticky z-10 inset-0"><Navbar /></nav>
         <div className="p-4">
           <Outlet />
         </div>
       </main>
-      {/* <HamburgerMenu /> */}
     </div>
   );
 }

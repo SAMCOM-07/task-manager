@@ -92,13 +92,13 @@ const FormOverlay = () => {
         const errorData = await response.json().catch(() => ({}));
         setAlertDetails({
           type: "error",
-          message: errorData.error || "An error occurred while creating the task. Please try again.",
+          message: errorData.error || `An error occurred while ${editDetails ? "updating" : "creating"} the task. Please try again.`,
         });
         setOpenAlert(true);
         return;
       }
 
-      setAlertDetails({ type: "success", message: "Task created successfully!" });
+      setAlertDetails({ type: "success", message: `Task ${editDetails ? "updated" : "created"} successfully!` });
       setOpenAlert(true);
 
     } catch {
@@ -119,7 +119,7 @@ const FormOverlay = () => {
     <div className={"w-dvw h-dvh py-12 bg-black/50 backdrop-blur-sm flex items-center justify-center px-6"}>
       <div ref={overlayRef} className="bg-background border border-border rounded-2xl shadow-lg w-full max-w-xl h-full max-h-fit overflow-auto relative">
         <div className="p-6 flex justify-between items-center text-lg font-medium sticky top-0 border-b border-border bg-background">
-          <h2 className="font-semibold text-2xl">Create New Task</h2>
+          <h2 className="font-semibold text-2xl">{editDetails ? "Edit Task" : "Create New Task"}</h2>
           <button
             onClick={() => {
               setOpenFormOverlay(false);
@@ -154,7 +154,6 @@ const FormOverlay = () => {
                 placeholder="Enter task description"
                 name="description"
                 defaultValue={editDetails?.description || ""}
-                maxLength={100}
               />
               {errors.description && <span className="text-destructive/70 text-sm">{errors.description}</span>}
             </label>

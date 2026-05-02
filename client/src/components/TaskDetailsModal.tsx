@@ -48,7 +48,7 @@ const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "text-red-600 bg-red-400/20";
+        return "text-destructive bg-destructive/20";
       case "medium":
         return "text-orange bg-orange/20";
       case "low":
@@ -79,13 +79,13 @@ const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
 
   return (
     <div
-      className="fixed inset-0 z-200 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-200 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm"
     >
       <div ref={modalRef} className="bg-card rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border">
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between p-6 border-b border-border bg-card">
+        <div className="sticky top-0 flex items-center justify-between px-6 py-4 border-b border-border bg-card">
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-foreground">{task.title}</h2>
+            <h2 className="text-xl font-bold text-foreground">{task.title}</h2>
             <p className="text-muted-foreground mt-1 text-sm">Task Details</p>
           </div>
           <button
@@ -103,7 +103,7 @@ const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
             <label className="block text-sm font-semibold text-foreground mb-2">
               Description
             </label>
-            <p className="text-foreground/80 bg-accent/50 rounded-lg p-4 leading-relaxed">
+            <p className="text-foreground/80 bg-accent/50 rounded-lg p-4 max-h-48 overflow-y-auto">
               {task.description}
             </p>
           </div>
@@ -168,7 +168,7 @@ const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
             <div
               className={cn(
                 "px-4 py-3 rounded-lg font-medium",
-                overdue ? "bg-red-400/20 text-red-600" : "bg-accent/50 text-foreground"
+                overdue ? "bg-destructive/20 text-destructive" : "bg-accent/50 text-foreground"
               )}
             >
               <div className="flex items-center justify-between">
@@ -197,15 +197,7 @@ const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="sticky bottom-0 flex justify-end gap-3 p-6 border-t border-border bg-accent/30">
-          <button
-            onClick={() => setOpenDetailsModal(false)}
-            className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/80 text-foreground font-medium transition-colors"
-          >
-            Close
-          </button>
-        </div>
+        
       </div>
     </div>
   );

@@ -25,6 +25,6 @@ export const createTaskSchema = z.object({
     .refine((date) => !isNaN(Date.parse(date)), "Invalid due date format")
     .refine(
       (date) => new Date(date) > new Date(),
-      "Due date must be in the future"
+      "Due date must be in the future",
     ),
 });
