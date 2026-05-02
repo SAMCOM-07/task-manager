@@ -3,13 +3,18 @@ import { pool } from "../db/pool";
 import { sanitizer } from "../utils/sanitizer";
 import { updateUserSchema } from "../schemas/user.schema";
 import bcrypt from "bcrypt";
+import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 
 // handle get current user
 export const getCurrentUserController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   try {
+    if (!req.user || !req.user.userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     const userId = req.user?.userId;
     const userQuery = "SELECT id, username, email FROM users WHERE id = $1";
     const userResult = await pool.query(userQuery, [userId]);
@@ -29,7 +34,7 @@ export const getCurrentUserController = async (
 
 // update user info
 export const updateUserDetailsController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   const data = sanitizer(req.body);
@@ -103,7 +108,7 @@ export const updateUserDetailsController = async (
 
 // change password controller
 export const changePasswordController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   const data = sanitizer(req.body);
@@ -164,7 +169,7 @@ export const changePasswordController = async (
 
 // delete account controller with password verification
 export const deleteAccountController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   const data = sanitizer(req.body);

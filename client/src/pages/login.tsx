@@ -67,9 +67,11 @@ const LoginPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify(data),
       });
+
+
       if (!result.ok) {
         const errorData = await result.json().catch(() => ({}));
         setAlertDetails({
@@ -79,6 +81,9 @@ const LoginPage = () => {
         setOpenAlert(true);
         return;
       }
+
+      const resData = await result.json()
+      localStorage.setItem("token", resData.token);
 
       setOpenAlert(true);
       setAlertDetails({

@@ -3,10 +3,11 @@ import { pool } from "../db/pool";
 import { randomUUID } from "crypto";
 import { sanitizer } from "../utils/sanitizer";
 import { createTaskSchema } from "../schemas/task.schema";
+import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 
 // create task controller
 export const createTaskController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   const data = sanitizer(req.body);
@@ -50,7 +51,7 @@ export const createTaskController = async (
 
 // read tasks controller with filters by query params and also search by title or description
 export const readTasksController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   try {
@@ -90,7 +91,7 @@ export const readTasksController = async (
 
 // update task controller
 export const updateTaskController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   const data = sanitizer(req.body);
@@ -152,7 +153,7 @@ export const updateTaskController = async (
 
 // delete task controller
 export const deleteTaskController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   const taskId = req.params.id;
@@ -188,7 +189,7 @@ export const deleteTaskController = async (
 
 // clear all tasks controller
 export const clearAllTasksController = async (
-  req: Request & { user?: { userId: string } },
+  req: AuthenticatedRequest,
   res: Response,
 ) => {
   try {

@@ -24,7 +24,10 @@ export const DeleteButton = ({ id }: { id: string | undefined }) => {
       setLoadingTasks(true);
       const res = await fetch(`${API_BASE_URL}/api/tasks/delete/${id}`, {
         method: "DELETE",
-        credentials: "include",
+        // credentials: "include",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       if (!res.ok) {
         setAlertDetails({ type: "error", message: "Failed to delete task. Please try again." });

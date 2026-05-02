@@ -129,7 +129,10 @@ export default function SettingsPage() {
       setLoadingDelete(true);
       const res = await fetch(`${API_BASE_URL}/api/tasks/clear`, {
         method: 'DELETE',
-        credentials: 'include',
+        // credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (res.ok) {
@@ -180,9 +183,10 @@ export default function SettingsPage() {
       setLoadingPasswordChange(true);
       const res = await fetch(`${API_BASE_URL}/api/users/change-password`, {
         method: 'POST',
-        credentials: 'include',
+        // credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           currentPassword: validationResult.data.currentPassword,
@@ -220,14 +224,17 @@ export default function SettingsPage() {
       setLoadingDeleteAccount(true);
       const res = await fetch(`${API_BASE_URL}/api/users/delete-account`, {
         method: 'DELETE',
-        credentials: 'include',
+        // credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           password: deletePassword,
         }),
       });
+
+      localStorage.removeItem("token");
 
       if (res.ok) {
         setAlertDetails({ type: 'success', message: 'Account deleted successfully. Redirecting...' });

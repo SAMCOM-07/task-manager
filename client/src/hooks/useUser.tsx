@@ -8,9 +8,13 @@ export const useUser = () => {
 
   const fetchUser = useCallback(async () => {
     setIsLoadingUser(true);
+    const token = localStorage.getItem("token");
     try {
       const res = await fetch(`${API_BASE_URL}/api/users/me`, {
-        credentials: "include",
+        // credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) {
@@ -26,7 +30,6 @@ export const useUser = () => {
       setIsLoadingUser(false);
     }
   }, [setIsLoadingUser, setUser]);
-
 
   return { fetchUser };
 

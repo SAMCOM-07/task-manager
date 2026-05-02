@@ -66,9 +66,10 @@ const ProfilePage = () => {
       setLoadingUsername(true);
       const res = await fetch(`${API_BASE_URL}/api/users/update`, {
         method: "PATCH",
-        credentials: "include",
+        // credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           username: editedUsername,
@@ -211,11 +212,11 @@ const ProfilePage = () => {
           <div className="bg-primary/10 border border-primary/20 rounded-lg p-6">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-primary/20 rounded-lg">
-                <AlertCircle size={36} className="text-primary-500" />
+                <AlertCircle size={36} className="text-primary" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">To Do</p>
-                <p className="text-3xl font-bold text-primary-500">{activityStats.todo}</p>
+                <p className="text-3xl font-bold text-primary">{activityStats.todo}</p>
               </div>
             </div>
           </div>

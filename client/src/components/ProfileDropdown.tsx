@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { User, Settings, LogOut } from "lucide-react";
 import { useTask } from "../hooks/useTask";
-import { API_BASE_URL } from "../config/api";
+// import { API_BASE_URL } from "../config/api";
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,20 +29,25 @@ const ProfileDropdown = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      // const res = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+      //   method: "POST",
+      //   // credentials: "include",
+      //   headers: {
+      //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //   },
+      // });
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        setOpenAlert(true);
-        setAlertDetails({
-          type: "error",
-          message: errorData.error || "An error occurred during logout. Please try again.",
-        });
-        return;
-      }
+      // if (!res.ok) {
+      //   const errorData = await res.json().catch(() => ({}));
+      //   setOpenAlert(true);
+      //   setAlertDetails({
+      //     type: "error",
+      //     message: errorData.error || "An error occurred during logout. Please try again.",
+      //   });
+
+      localStorage.removeItem("token");
+      // return;
+      // }
 
       setUser(null);
       setOpenAlert(true);

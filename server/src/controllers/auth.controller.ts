@@ -55,18 +55,23 @@ export const registerController = async (req: Request, res: Response) => {
       { expiresIn: "2d" }, // token lasts 2 days
     );
 
-    const isProduction = process.env.NODE_ENV === "production";
+    // const isProduction = process.env.NODE_ENV === "production";
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      maxAge: 2 * 24 * 60 * 60 * 1000,
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: isProduction,
+    //   sameSite: isProduction ? "none" : "lax",
+    //   maxAge: 2 * 24 * 60 * 60 * 1000,
+    // });
 
     res
       .status(201)
-      .json({ success: true, message: "User registered successfully", user });
+      .json({
+        success: true,
+        token,
+        message: "User registered successfully",
+        user,
+      });
   } catch (error) {
     res.status(500).json({ error: "Error occurred while registering" });
   }
@@ -109,17 +114,20 @@ export const loginController = async (req: Request, res: Response) => {
       { expiresIn: "2d" },
     );
 
-    const isProduction = process.env.NODE_ENV === "production";
+    // const isProduction = process.env.NODE_ENV === "production";
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      maxAge: 2 * 24 * 60 * 60 * 1000,
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: isProduction,
+    //   sameSite: isProduction ? "none" : "lax",
+    //   maxAge: 2 * 24 * 60 * 60 * 1000,
+    // });
+    res.status(200).json({
+      success: true,
+      user,
+      token,
+      message: "Logged in successfully",
     });
-    res
-      .status(200)
-      .json({ success: true, user, message: "Logged in successfully" });
   } catch (error) {
     res.status(500).json({ error: "Error logging in" });
   }

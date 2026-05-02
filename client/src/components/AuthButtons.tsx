@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useTask } from "../hooks/useTask";
 import { LogOut } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
+// import { API_BASE_URL } from "../config/api";
 
 // logout button
 export const LogoutButton = () => {
@@ -13,19 +13,24 @@ export const LogoutButton = () => {
   const handleLogout = async () => {
     setLoadingLogout(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        setOpenAlert(true);
-        setAlertDetails({
-          type: "error",
-          message: errorData.error || "An error occurred during logout. Please try again.",
-        });
-        return;
-      }
+      // const res = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+      //   method: "POST",
+      //   // credentials: "include",
+      //   headers: {
+      //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //   },
+      // });
+      // if (!res.ok) {
+      //   const errorData = await res.json().catch(() => ({}));
+      //   setOpenAlert(true);
+      //   setAlertDetails({
+      //     type: "error",
+      //     message: errorData.error || "An error occurred during logout. Please try again.",
+      //   });
+
+      localStorage.removeItem("token");
+      // return;
+      // }
 
       setUser(null);
       setOpenAlert(true);
