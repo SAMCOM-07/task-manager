@@ -22,7 +22,6 @@ export const useTaskFetch = () => {
       if (search) url.searchParams.set("search", search);
 
       const res = await fetch(url.toString(), {
-        // credentials: "include",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

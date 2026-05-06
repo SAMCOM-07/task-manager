@@ -78,6 +78,8 @@ export const readTasksController = async (
       index++;
     }
 
+    query += ` ORDER BY created_at ASC`;
+
     const result = await pool.query(query, values);
 
     res.status(200).json({

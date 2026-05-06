@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import { taskRouter } from "./routes/task.route";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { userRouter } from "./routes/user.route";
+import { getTaskAIHelp } from "./controllers/ai.controller";
 
 dotenv.config();
 
@@ -27,5 +28,6 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/users", authMiddleware, userRouter);
 app.use("/api/tasks", authMiddleware, taskRouter);
+app.post("/api/ai/task-help", authMiddleware, getTaskAIHelp);
 
 export default app;

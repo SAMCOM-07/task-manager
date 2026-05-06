@@ -31,7 +31,7 @@ export default function DashboardPage() {
         {taskAnalysis.map((item) => (
           <div key={item.subTitle} className={`${item.bgGradient} text-white/80 rounded-lg py-3 px-4 shadow-sm relative`}>
             <h2 className="font-bold">{item.title}</h2>
-            <span className="text-3xl font-bold block">{item.value}</span>
+            <span className="text-3xl font-bold block">{loadingTasks ? <div className="mt-2 w-18 h-7 bg-card/50 rounded animate-pulse" /> : item.value}</span>
             <small className="text-white/60">{item.subTitle}</small>
             <div className="absolute bottom-3 right-3 opacity-70">{item.icon}</div>
           </div>

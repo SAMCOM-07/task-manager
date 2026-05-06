@@ -11,7 +11,6 @@ export const useUser = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(`${API_BASE_URL}/api/users/me`, {
-        // credentials: "include",
         headers: {
           Authorization: `Bearer ${token}`,
         },

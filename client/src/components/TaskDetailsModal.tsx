@@ -1,11 +1,13 @@
-import { X, Calendar, Tag, AlertCircle, Zap, CheckCircle } from "lucide-react";
+import { X, Calendar, Tag, AlertCircle, Zap, CheckCircle, MessageCircle } from "lucide-react";
 import { useTask } from "../hooks/useTask";
 import type { TaskType } from "../types/types";
 import { cn } from "../lib/utils";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { AiTaskHelp } from "./aiTaskHelp";
 
 const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
   const { setOpenDetailsModal } = useTask();
+  const [askAi, setAskAi] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,124 +83,137 @@ const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
     <div
       className="fixed inset-0 z-200 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm"
     >
-      <div ref={modalRef} className="bg-card rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border">
-        {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between px-6 py-4 border-b border-border bg-card">
-          <div className="flex-1">
-            <h2 className="text-xl font-bold text-foreground">{task.title}</h2>
-            <p className="text-muted-foreground mt-1 text-sm">Task Details</p>
-          </div>
-          <button
-            onClick={() => setOpenDetailsModal(false)}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X size={24} />
-          </button>
-        </div>
+      {askAi ? (
+        <AiTaskHelp task={task} onBack={() => setAskAi(false)} />
+      ) : (
+        <div
+            ref={modalRef}
+            className="bg-card rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border">
+            {/* Header */}
+            <div className="sticky top-0 flex items-center justify-between px-6 py-4 border-b border-border bg-card">
+              <div className="flex flex-col max-w-[45%]">
+                <h2 className="text-lg leading-5 font-bold text-foreground">{task.title}</h2>
+                <p className="text-muted-foreground mt-1 text-sm">Task Details</p>
+              </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-2">
-              Description
-            </label>
-            <p className="text-foreground/80 bg-accent/50 rounded-lg p-4 max-h-48 overflow-y-auto">
-              {task.description}
-            </p>
-          </div>
-
-          {/* Status, Priority, Category */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Status */}
-            <div>
-              <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
-                <CheckCircle size={16} />
-                Status
-              </label>
-              <div
-                className={cn(
-                  "px-4 py-2 rounded-lg font-medium text-center capitalize inline-block w-full",
-                  getStatusColor(task.status)
-                )}
+              <button
+                onClick={() => setAskAi(true)}
+                className="flex items-center gap-2 px-3 py-2 text-primary rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
               >
-                {task.status === "in_progress" ? "In Progress" : task.status}
-              </div>
-            </div>
+                <MessageCircle size={18} className="animate-bounce -mb-1"/>
+                <span className="text-xs font-medium text-nowrap">Ask AI for Help</span>
+              </button>
 
-            {/* Priority */}
-            <div>
-              <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
-                <Zap size={16} />
-                Priority
-              </label>
-              <div
-                className={cn(
-                  "px-4 py-2 rounded-lg font-medium text-center capitalize inline-block w-full",
-                  getPriorityColor(task.priority)
-                )}
+              <button
+                onClick={() => setOpenDetailsModal(false)}
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                {task.priority}
-              </div>
+                <X size={24} />
+              </button>
             </div>
 
-            {/* Category */}
-            <div>
-              <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
-                <Tag size={16} />
-                Category
-              </label>
-              <div
-                className={cn(
-                  "px-4 py-2 rounded-lg font-medium text-center capitalize inline-block w-full",
-                  getCategoryColor(task.category)
-                )}
-              >
-                {task.category}
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-2">
+                  Description
+                </label>
+                <p className="text-foreground/80 bg-accent/50 rounded-lg p-4 max-h-48 overflow-y-auto">
+                  {task.description}
+                </p>
+              </div>
+
+              {/* Status, Priority, Category */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Status */}
+                <div>
+                  <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
+                    <CheckCircle size={16} />
+                    Status
+                  </label>
+                  <div
+                    className={cn(
+                      "px-4 py-2 rounded-lg font-medium text-center capitalize inline-block w-full",
+                      getStatusColor(task.status)
+                    )}
+                  >
+                    {task.status === "in_progress" ? "In Progress" : task.status}
+                  </div>
+                </div>
+
+                {/* Priority */}
+                <div>
+                  <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
+                    <Zap size={16} />
+                    Priority
+                  </label>
+                  <div
+                    className={cn(
+                      "px-4 py-2 rounded-lg font-medium text-center capitalize inline-block w-full",
+                      getPriorityColor(task.priority)
+                    )}
+                  >
+                    {task.priority}
+                  </div>
+                </div>
+
+                {/* Category */}
+                <div>
+                  <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
+                    <Tag size={16} />
+                    Category
+                  </label>
+                  <div
+                    className={cn(
+                      "px-4 py-2 rounded-lg font-medium text-center capitalize inline-block w-full",
+                      getCategoryColor(task.category)
+                    )}
+                  >
+                    {task.category}
+                  </div>
+                </div>
+              </div>
+
+              {/* Due Date */}
+              <div>
+                <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
+                  <Calendar size={16} />
+                  Due Date
+                </label>
+                <div
+                  className={cn(
+                    "px-4 py-3 rounded-lg font-medium",
+                    overdue ? "bg-destructive/20 text-destructive" : "bg-accent/50 text-foreground"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>
+                      {new Date(task.due_date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </span>
+                    {overdue && (
+                      <span className="flex items-center gap-1 text-xs font-bold animate-pulse">
+                        <AlertCircle size={14} />
+                        OVERDUE
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Task ID */}
+              <div className="pt-4 border-t border-border/50">
+                <p className="text-xs text-muted-foreground">
+                  Task ID: <span className="font-mono">{task.id}</span>
+                </p>
               </div>
             </div>
           </div>
-
-          {/* Due Date */}
-          <div>
-            <label className="flex text-sm font-semibold text-foreground mb-2 items-center gap-2">
-              <Calendar size={16} />
-              Due Date
-            </label>
-            <div
-              className={cn(
-                "px-4 py-3 rounded-lg font-medium",
-                overdue ? "bg-destructive/20 text-destructive" : "bg-accent/50 text-foreground"
-              )}
-            >
-              <div className="flex items-center justify-between">
-                <span>
-                  {new Date(task.due_date).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </span>
-                {overdue && (
-                  <span className="flex items-center gap-1 text-xs font-bold animate-pulse">
-                    <AlertCircle size={14} />
-                    OVERDUE
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Task ID */}
-          <div className="pt-4 border-t border-border/50">
-            <p className="text-xs text-muted-foreground">
-              Task ID: <span className="font-mono">{task.id}</span>
-            </p>
-          </div>
-        </div>
-
-        
-      </div>
+      )}
     </div>
   );
 };
