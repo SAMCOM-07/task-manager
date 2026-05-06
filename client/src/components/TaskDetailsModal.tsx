@@ -3,7 +3,7 @@ import { useTask } from "../hooks/useTask";
 import type { TaskType } from "../types/types";
 import { cn } from "../lib/utils";
 import { useRef, useEffect, useState } from "react";
-import { AiTaskHelp } from "./aiTaskHelp";
+import { AiTaskHelp } from "./AiTaskHelp";
 
 const TaskDetailsModal = ({ task }: { task: TaskType | null }) => {
   const { setOpenDetailsModal } = useTask();

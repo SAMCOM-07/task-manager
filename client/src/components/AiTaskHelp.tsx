@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Loader2, AlertCircle, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import type { TaskType } from "../types/types";
+import type { TaskType } from "../types/types.ts";
 import { API_BASE_URL } from "../config/api.ts";
 
 interface AiTaskHelpProps {

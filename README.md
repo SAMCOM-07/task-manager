@@ -41,6 +41,13 @@ A modern, feature-rich task management dashboard built as a Single Page Applicat
 - 🔔 **Toast Notifications** — Success/error alerts with auto-dismiss
 - 🏷️ **Visual Indicators** — Color-coded badges for status and priority
 
+### AI Features
+- 🤖 **AI Task Assistant** — Get intelligent suggestions and step-by-step guidance for task completion
+- 💡 **Smart Insights** — Analyze task title and description to provide actionable advice
+- 📝 **Markdown Formatted Responses** — Rich, readable AI-generated guidance with structured formatting
+- ⚡ **Quick Access** — One-click AI help directly from task details modal
+- 🔐 **Secure & Private** — Authenticated requests with JWT token verification
+
 ---
 
 ## 🛠️ Tech Stack
@@ -56,6 +63,7 @@ A modern, feature-rich task management dashboard built as a Single Page Applicat
 | **Visualization** | Recharts 3 |
 | **Icons** | Lucide React |
 | **PDF Generation** | jsPDF 4 |
+| **Markdown Rendering** | React Markdown |
 | **Validation** | Zod 4 |
 | **Linting** | ESLint 9 · typescript-eslint |
 | **Deployment** | Netlify |
@@ -68,6 +76,7 @@ A modern, feature-rich task management dashboard built as a Single Page Applicat
 | **Language** | TypeScript 6 |
 | **Database** | PostgreSQL |
 | **Authentication** | JWT + bcrypt |
+| **AI Integration** | OpenAI (GPT-4o-mini via OpenRouter) |
 | **Validation** | Zod |
 | **Security** | CORS · Cookie Parser · Sanitize HTML |
 
@@ -76,7 +85,7 @@ A modern, feature-rich task management dashboard built as a Single Page Applicat
 ## 📁 Project Structure
 
 ```
-group-three/
+task-manager/
 ├── client/                          # Frontend React SPA
 │   ├── src/
 │   │   ├── App.tsx                  # Root layout
@@ -215,6 +224,7 @@ group-three/
    DATABASE_URL=postgresql://user:password@localhost:5432/task_manager
    PORT=5000
    CORS_ORIGIN=http://localhost:5173
+   OPENROUTER_API_KEY=your_openrouter_api_key_here
    ```
 
 ### Running Locally
@@ -284,6 +294,20 @@ pnpm start     # Run compiled server
 - Mobile-first approach with Tailwind CSS
 - Adaptive navigation (sidebar → hamburger menu)
 - Touch-friendly interfaces
+
+### AI Features Implementation
+- **Backend AI Controller** (`ai.controller.ts`) — Handles OpenAI API integration with GPT-4o-mini model
+- **Structured Prompts** — System prompts guide AI to provide actionable, step-by-step guidance
+- **Markdown Rendering** — React Markdown component beautifully formats AI responses with styling
+- **Error Handling** — Graceful fallbacks with user-friendly error messages
+- **Authentication** — JWT middleware ensures only authenticated users access AI features
+- **OpenRouter Integration** — Uses OpenRouter API for reliable, cost-effective AI model access
+
+**How to Enable AI Features:**
+1. Get your OpenRouter API key from [openrouter.ai](https://openrouter.ai)
+2. Add `OPENROUTER_API_KEY` to your server `.env` file
+3. Click "Ask AI for Help" button in any task details modal
+4. AI analyzes task title and description to provide smart insights
 
 ---
 
