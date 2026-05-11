@@ -3,7 +3,7 @@
 A modern, feature-rich task management dashboard built as a Single Page Application with **React**, **TypeScript**, and **Tailwind CSS**. Create, organize, filter, and visualize your tasks through an intuitive and responsive interface with real-time analytics.
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-SAMCOM--07%2Ftask--manager-blue?logo=github)](https://github.com/SAMCOM-07/task-manager.git)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Netlify-blueviolet)](https://taskmanager-spa.netlify.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-vercel-blueviolet)](https://taskmanager-spa.vercel.app)
 [![React](https://img.shields.io/badge/React-19.2.0-61dafb?logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178c6?logo=typescript)](https://www.typescriptlang.org)
 
@@ -66,7 +66,7 @@ A modern, feature-rich task management dashboard built as a Single Page Applicat
 | **Markdown Rendering** | React Markdown |
 | **Validation** | Zod 4 |
 | **Linting** | ESLint 9 · typescript-eslint |
-| **Deployment** | Netlify |
+| **Deployment** | vercel |
 
 ### Backend
 | Component | Technology |
@@ -313,12 +313,12 @@ pnpm start     # Run compiled server
 
 ## 🚀 Deployment
 
-### Frontend (Netlify)
-1. Connect GitHub repository to Netlify
+### Frontend (Vercel)
+1. Connect GitHub repository to Vercel
 2. Set build command: `cd client && pnpm install && pnpm build`
 3. Set environment variable: `VITE_API_URL=<your-backend-url>`
 4. Deploy automatically on push to main
-5. Live: [https://taskmanager-spa.netlify.app](https://taskmanager-spa.netlify.app)
+5. Live: [https://taskmanager-spa.vercel.app](https://taskmanager-spa.vercel.app)
 
 ### Backend (Render)
 - Deploy to Render for production hosting
@@ -349,7 +349,7 @@ This project is licensed under the ISC License - see the LICENSE file for detail
 
 **Samuel**
 - GitHub: [@SAMCOM-07](https://github.com/SAMCOM-07)
-- Portfolio: [https://samuelshonde.netlify.app](https://samuelshonde.netlify.app)
+- Portfolio: [https://samuelshonde.vercel.app](https://samuelshonde.vercel.app)
 - Repository: [task-manager](https://github.com/SAMCOM-07/task-manager.git)
 
 ---
@@ -366,5 +366,5 @@ For issues, questions, or suggestions, please:
 ## 🙏 Acknowledgments
 
 - React team for the amazing framework
-- Vercel/Netlify/Render for hosting and deployment
+- Vercel/vercel/Render for hosting and deployment
 - Open-source community for libraries and tools

@@ -16,7 +16,7 @@ const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 
 app.use(
   cors({
-    origin: [corsOrigin, "https://taskmanager-spa.netlify.app"],
+    origin: [corsOrigin, "https://taskmanager-spa.netlify.app", "https://taskmanager-spa.vercel.app"],
     // credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
