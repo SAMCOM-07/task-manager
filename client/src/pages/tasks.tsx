@@ -14,14 +14,14 @@ const TaskPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const { setOpenFormOverlay, openFormOverlay } = useTask();
+  const { setOpenFormOverlay } = useTask();
   const currentFilter = searchParams.get("filter");
 
   const fetchTasks = useTaskFetch();
 
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks, openFormOverlay]);
+  }, [fetchTasks]);
 
   return (
     <section className="">

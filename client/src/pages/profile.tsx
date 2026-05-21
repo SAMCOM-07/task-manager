@@ -22,7 +22,7 @@ import { useTaskFetch } from "../hooks/useTaskFetch";
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const { tasks, setAlertDetails, setOpenAlert, openFormOverlay } = useTask();
+  const { tasks, setAlertDetails, setOpenAlert } = useTask();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [editedUsername, setEditedUsername] = useState(user?.username || "");
   const [loadingUsername, setLoadingUsername] = useState(false);
@@ -32,7 +32,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks, openFormOverlay]);
+  }, [fetchTasks]);
 
   // Calculate activity statistics
   const activityStats = {

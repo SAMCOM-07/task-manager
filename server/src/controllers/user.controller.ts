@@ -155,11 +155,15 @@ export const changePasswordController = async (
     const updateQuery =
       "UPDATE users SET password = $1 WHERE id = $2 RETURNING id, username, email";
     const result = await pool.query(updateQuery, [hashedPassword, userId]);
+    let user = result.rows[0];
 
     res.status(200).json({
       success: true,
       message: "Password changed successfully",
-      user: result.rows[0],
+      user: {
+        ...user,
+        password: undefined,
+      },
     });
   } catch (error) {
     console.error("Error changing password:", error);

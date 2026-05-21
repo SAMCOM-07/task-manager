@@ -8,13 +8,13 @@ import { useTaskFetch } from "../hooks/useTaskFetch";
 
 export default function DashboardPage() {
 
-  const { tasks, loadingTasks, openFormOverlay } = useTask();
+  const { tasks, loadingTasks } = useTask();
 
   const fetchTasks = useTaskFetch();
 
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks, openFormOverlay]);
+  }, [fetchTasks]);
 
 
 

@@ -3,6 +3,8 @@ import { useTask } from "../hooks/useTask";
 import { API_BASE_URL } from "../config/api";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod"
+import { useTaskFetch } from "../hooks/useTaskFetch";
+
 
 // zod validation
 const taskSchema = z.object({
@@ -25,6 +27,7 @@ const FormOverlay = () => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
+  const fetchTasks = useTaskFetch();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -98,9 +101,12 @@ const FormOverlay = () => {
         return;
       }
 
+      await fetchTasks();
       setAlertDetails({ type: "success", message: `Task ${editDetails ? "updated" : "created"} successfully!` });
       setOpenAlert(true);
 
+      setOpenFormOverlay(false);
+      setEditDetails(null);
     } catch {
       setAlertDetails({
         type: "error",
@@ -111,8 +117,6 @@ const FormOverlay = () => {
       setLoading(false);
     }
 
-    setOpenFormOverlay(false);
-    setEditDetails(null);
   };
 
   return (
@@ -224,7 +228,8 @@ const FormOverlay = () => {
             </button>
             <button
               type="submit"
-              className="min-w-24 px-4 py-2 bg-primary/75 rounded-lg hover:bg-primary transition-all duration-300 active:scale-95"
+              disabled={loading}
+              className="min-w-24 px-4 py-2 bg-primary/75 rounded-lg hover:bg-primary transition-all duration-300 active:scale-95 disabled:cursor-not-allowed"
             >
               {loading ? (editDetails ? <div className="loading-spinner"></div> : <div className="loading-spinner"></div>) : (editDetails ? "Update Task" : "Create Task")}
             </button>

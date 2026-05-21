@@ -59,7 +59,10 @@ export const registerController = async (req: Request, res: Response) => {
       success: true,
       token,
       message: "User registered successfully",
-      user,
+      user: {
+        ...user,
+        password: undefined,
+      },
     });
   } catch (error) {
     res.status(500).json({ error: "Error occurred while registering" });
@@ -105,7 +108,10 @@ export const loginController = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      user,
+      user: {
+        ...user,
+        password: undefined,
+      },
       token,
       message: "Logged in successfully",
     });

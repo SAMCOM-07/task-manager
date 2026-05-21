@@ -18,7 +18,7 @@ const Alert = ({ details }: { details: { type: string; message: string } | null 
 
   return (
     <div>
-      <div className={cn("z-200 absolute left-1/2 transform -translate-x-1/2  px-4 py-2 rounded shadow text-white", details?.type === "success" ? "bg-green" : "bg-destructive", openAlert ? "top-10 opacity-100" : "-top-10 opacity-0", "transition-all duration-500")}>
+      <div className={cn("z-1000 absolute left-1/2 transform -translate-x-1/2  px-4 py-2 rounded shadow text-white", details?.type === "success" ? "bg-green" : "bg-destructive", openAlert ? "top-10 opacity-100" : "-top-10 opacity-0", "transition-all duration-500")}>
         {details?.message}
       </div>
     </div>

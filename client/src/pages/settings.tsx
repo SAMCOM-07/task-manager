@@ -16,7 +16,7 @@ import z from "zod";
 export default function SettingsPage() {
 
   const fetchTasks = useTaskFetch();
-  const { tasks, setAlertDetails, setOpenAlert, theme, setTheme, openFormOverlay } = useTask();
+  const { tasks, setAlertDetails, setOpenAlert, theme, setTheme } = useTask();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [loadingPasswordChange, setLoadingPasswordChange] = useState(false);
@@ -27,7 +27,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks, openFormOverlay]);
+  }, [fetchTasks]);
 
 
 
@@ -198,6 +198,7 @@ export default function SettingsPage() {
         setAlertDetails({ type: 'success', message: 'Password changed successfully!' });
         setOpenAlert(true);
         passwordFormRef.current?.reset();
+        console.log(res)
       } else {
         const error = await res.json();
         setAlertDetails({ type: 'error', message: error.error || 'Failed to change password.' });

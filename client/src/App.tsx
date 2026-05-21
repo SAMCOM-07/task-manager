@@ -17,7 +17,7 @@ export default function AppLayout() {
 
       {openDetailsModal && <TaskDetailsModal task={selectedTask} />}
 
-      {openFormOverlay && <div className="fixed inset-0 z-1000">
+      {openFormOverlay && <div className="fixed inset-0 z-700">
         <FormOverlay />
       </div>}
       <Sidebar />
