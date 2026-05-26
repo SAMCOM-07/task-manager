@@ -64,12 +64,12 @@ const LoginPage = () => {
 
       const result = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-
 
       if (!result.ok) {
         const errorData = await result.json().catch(() => ({}));
@@ -89,7 +89,7 @@ const LoginPage = () => {
         type: "success",
         message: "Login successful!",
       });
-      navigate("/");
+      navigate("/dashboard");
 
       setTimeout(() => {
         fetchUser();

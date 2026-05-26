@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useUser } from "../hooks/useUser";
 import { useTaskFetch } from "../hooks/useTaskFetch";
+import { authFetch } from "../utils/authFetch";
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -64,12 +65,10 @@ const ProfilePage = () => {
 
     try {
       setLoadingUsername(true);
-      const res = await fetch(`${API_BASE_URL}/api/users/update`, {
+      const res = await authFetch(`${API_BASE_URL}/api/users/update`, {
         method: "PATCH",
-        // credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           username: editedUsername,

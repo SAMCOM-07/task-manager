@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown";
 import type { TaskType } from "../types/types.ts";
 import { API_BASE_URL } from "../config/api.ts";
 import { cn } from "../lib/utils.ts";
+import { authFetch } from "../utils/authFetch.ts";
 
 interface AiTaskHelpProps {
   task: TaskType | null;
@@ -59,11 +60,10 @@ export const AiTaskHelp = ({ task, onBack }: AiTaskHelpProps) => {
       if (!task) return;
 
       try {
-        const res = await fetch(`${API_BASE_URL}/api/ai/task-help`, {
+        const res = await authFetch(`${API_BASE_URL}/api/ai/task-help`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           signal: controller.signal,
           body: JSON.stringify({

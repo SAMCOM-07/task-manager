@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "../config/api";
+import { authFetch } from "./authFetch";
 
 export const getTasks = async (searchParams: URLSearchParams) => {
   try {
@@ -9,9 +10,7 @@ export const getTasks = async (searchParams: URLSearchParams) => {
     if (filter) url.searchParams.set("filter", filter);
     if (search) url.searchParams.set("search", search);
 
-    const res = await fetch(url.toString(), {
-      credentials: "include",
-    });
+    const res = await authFetch(url.toString());
 
     if (!res.ok) {
       throw new Error("Failed to fetch tasks");

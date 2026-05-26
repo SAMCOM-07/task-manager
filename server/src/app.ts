@@ -21,7 +21,7 @@ app.use(
       "https://taskmanager-spa.netlify.app",
       "https://taskmanager-spa.vercel.app",
     ],
-    // credentials: true,
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );

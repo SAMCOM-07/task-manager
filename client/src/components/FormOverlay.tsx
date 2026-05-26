@@ -4,6 +4,7 @@ import { API_BASE_URL } from "../config/api";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod"
 import { useTaskFetch } from "../hooks/useTaskFetch";
+import { authFetch } from "../utils/authFetch";
 
 
 // zod validation
@@ -81,13 +82,11 @@ const FormOverlay = () => {
       const url = editDetails ? `${API_BASE_URL}/api/tasks/update/${editDetails.id}` : `${API_BASE_URL}/api/tasks/create`;
       const method = editDetails ? "PATCH" : "POST";
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         method: method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        // credentials: "include",
         body: JSON.stringify(validatedData.data),
       });
 

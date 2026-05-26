@@ -12,6 +12,7 @@ import {
 import { jsPDF } from "jspdf";
 import { useTaskFetch } from "../hooks/useTaskFetch";
 import z from "zod";
+import { authFetch } from "../utils/authFetch";
 
 export default function SettingsPage() {
 
@@ -127,12 +128,8 @@ export default function SettingsPage() {
   const handleClearAllTasks = async () => {
     try {
       setLoadingDelete(true);
-      const res = await fetch(`${API_BASE_URL}/api/tasks/clear`, {
+      const res = await authFetch(`${API_BASE_URL}/api/tasks/clear`, {
         method: 'DELETE',
-        // credentials: 'include',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
       });
 
       if (res.ok) {
@@ -181,12 +178,10 @@ export default function SettingsPage() {
 
     try {
       setLoadingPasswordChange(true);
-      const res = await fetch(`${API_BASE_URL}/api/users/change-password`, {
+      const res = await authFetch(`${API_BASE_URL}/api/users/change-password`, {
         method: 'POST',
-        // credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           currentPassword: validationResult.data.currentPassword,
@@ -223,12 +218,10 @@ export default function SettingsPage() {
 
     try {
       setLoadingDeleteAccount(true);
-      const res = await fetch(`${API_BASE_URL}/api/users/delete-account`, {
+      const res = await authFetch(`${API_BASE_URL}/api/users/delete-account`, {
         method: 'DELETE',
-        // credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           password: deletePassword,

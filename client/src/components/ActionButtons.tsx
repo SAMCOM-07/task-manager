@@ -3,6 +3,7 @@ import { useTask } from "../hooks/useTask";
 import { useState } from "react";
 import { useTaskFetch } from "../hooks/useTaskFetch";
 import { API_BASE_URL } from "../config/api";
+import { authFetch } from "../utils/authFetch";
 
 
 export const DeleteButton = ({ id }: { id: string | undefined }) => {
@@ -22,12 +23,8 @@ export const DeleteButton = ({ id }: { id: string | undefined }) => {
 
     try {
       setLoadingTasks(true);
-      const res = await fetch(`${API_BASE_URL}/api/tasks/delete/${id}`, {
+      const res = await authFetch(`${API_BASE_URL}/api/tasks/delete/${id}`, {
         method: "DELETE",
-        // credentials: "include",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
       });
       if (!res.ok) {
         setAlertDetails({ type: "error", message: "Failed to delete task. Please try again." });

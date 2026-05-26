@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useAuth } from "./useAuth";
 import { API_BASE_URL } from "../config/api";
+import { authFetch } from "../utils/authFetch";
 
 export const useUser = () => {
 
@@ -8,13 +9,8 @@ export const useUser = () => {
 
   const fetchUser = useCallback(async () => {
     setIsLoadingUser(true);
-    const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`${API_BASE_URL}/api/users/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await authFetch(`${API_BASE_URL}/api/users/me`);
 
       if (!res.ok) {
         setUser(null);

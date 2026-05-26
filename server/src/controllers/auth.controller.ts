@@ -5,6 +5,18 @@ import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import { sanitizer } from "../utils/sanitizer";
 import { createUserSchema, loginUserSchema } from "../schemas/user.schema";
+import { generateAccessToken, generateRefreshToken } from "../utils/token";
+
+const getRefreshCookieOptions = () => {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? ("none" as const) : ("lax" as const),
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  };
+};
 
 // handle register
 export const registerController = async (req: Request, res: Response) => {
@@ -23,7 +35,7 @@ export const registerController = async (req: Request, res: Response) => {
     const hashedPassword = (await bcrypt.hash(password, 10)) as string;
     const id = randomUUID();
 
-    //   Check if email or username already exists
+    //   Check if email exists
     const emailCheckQuery = "SELECT * FROM users WHERE email = $1";
     const emailCheckResult = await pool.query(emailCheckQuery, [email]);
 
@@ -47,17 +59,16 @@ export const registerController = async (req: Request, res: Response) => {
     const result = await pool.query(insertQuery, values);
     const user = result.rows[0];
 
-    const token = jwt.sign(
-      {
-        userId: user.id,
-      },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "2d" }, // token lasts 2 days
-    );
+    const accessToken = generateAccessToken(user.id);
+
+    const refreshToken = generateRefreshToken(user.id);
+
+    // store refresh token in cookie
+    res.cookie("refreshToken", refreshToken, getRefreshCookieOptions());
 
     res.status(201).json({
       success: true,
-      token,
+      token: accessToken,
       message: "User registered successfully",
       user: {
         ...user,
@@ -100,11 +111,11 @@ export const loginController = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Incorrect password" });
     }
 
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "2d" },
-    );
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    // store refresh token in cookie
+    res.cookie("refreshToken", refreshToken, getRefreshCookieOptions());
 
     res.status(200).json({
       success: true,
@@ -112,7 +123,7 @@ export const loginController = async (req: Request, res: Response) => {
         ...user,
         password: undefined,
       },
-      token,
+      token: accessToken,
       message: "Logged in successfully",
     });
   } catch (error) {
@@ -120,14 +131,35 @@ export const loginController = async (req: Request, res: Response) => {
   }
 };
 
+// handle token refresh
+export const refreshTokenController = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).json({ message: "No refresh token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET!,
+    ) as {
+      userId: string;
+    };
+
+    const newAccessToken = generateAccessToken(decoded.userId);
+
+    return res.status(200).json({
+      token: newAccessToken,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      error: "Invalid refresh token",
+    });
+  }
+};
+
 // handle logout
 export const logoutController = (req: Request, res: Response) => {
-  const isProduction = process.env.NODE_ENV === "production";
-
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: isProduction ? "none" : "lax",
-  });
+  res.clearCookie("refreshToken", getRefreshCookieOptions());
   res.status(200).json({ success: true, message: "Logged out successfully" });
 };

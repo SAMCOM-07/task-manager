@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useTask } from "./useTask";
 import { useSearchParams } from "react-router-dom";
 import { API_BASE_URL } from "../config/api";
+import { authFetch } from "../utils/authFetch";
 
 export const useTaskFetch = () => {
 
@@ -21,11 +22,7 @@ export const useTaskFetch = () => {
       if (filter) url.searchParams.set("filter", filter);
       if (search) url.searchParams.set("search", search);
 
-      const res = await fetch(url.toString(), {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await authFetch(url.toString());
 
       if (!res.ok) {
         throw new Error("Failed to fetch tasks");

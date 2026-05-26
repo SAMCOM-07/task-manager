@@ -32,7 +32,7 @@ export default function Sidebar() {
     <>
       {showSidebar && (
         <div
-          className="fixed inset-0 z-40 md:hidden bg-background/10 backdrop-blur-xs"
+          className="fixed inset-0 z-40 md:hidden bg-background/70 "
           onClick={() => setShowSidebar(false)}
         />
       )}
@@ -81,12 +81,12 @@ export default function Sidebar() {
                 </div>
               </div>
             ) : <NavLink onClick={() => setShowSidebar(false)} to={'/profile'} className={'flex items-center gap-3'}>
-              <div className="w-10 h-10 rounded-full font-medium  text-xl bg-linear-to-r from-primary to-purple-600 text-white flex items-center justify-center">
+              <div className="min-w-10 min-h-10 rounded-full font-medium  text-xl bg-linear-to-r from-primary to-purple-600 text-white flex items-center justify-center">
                 {user?.username?.charAt(0) || "U"}
               </div>
-              <h2 className="leading-4">
+              <h2 className="leading-4 w-full">
                 <span className="block font-medium">{user?.username || "User"}</span>
-                <span className="text-sm text-muted-foreground">View Profile</span>
+                <span className="block text-xs mt-0.5 max-w-3/4 truncate text-muted-foreground">{user?.email || "user@example.com"}</span>
               </h2>
             </NavLink>}
           </div>
