@@ -47,11 +47,11 @@ const TaskFilter = () => {
     <div className="flex items-center gap-3">
       <label className="text-sm font-medium text-muted-foreground">Filter:</label>
 
-      <div className="relative w-42" ref={dropdownRef}>
+      <div className="relative w-36" ref={dropdownRef}>
         {/* Trigger */}
         <button
           onClick={() => setOpen(!open)}
-          className="w-full flex items-center justify-between bg-accent border border-border px-3 py-1.5 rounded-md shadow-sm shadow-muted-foreground/50 text-sm hover:border-primary/60 transition-all"
+          className="w-full flex items-center justify-between bg-accent border border-border px-3 py-1.5 rounded-md shadow-sm shadow-muted-foreground/50 text-xs hover:border-primary/60 transition-all"
         >
           <span>{selectedOption?.label}</span>
           <ChevronDown
@@ -75,7 +75,7 @@ const TaskFilter = () => {
                 onClick={() => {
                   setOpen(false);
                 }}
-                className={`block w-full text-left px-4 py-2 text-sm hover:bg-accent/50 transition-colors ${selectedOption?.value === option.value
+                className={`block w-full text-left px-4 py-2.5 text-xs hover:bg-accent/50 transition-colors ${selectedOption?.value === option.value
                   && "bg-accent text-primary font-medium"
                   }`}
               >

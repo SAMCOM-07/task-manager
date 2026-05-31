@@ -27,7 +27,7 @@ const TaskPage = () => {
     <section className="">
 
       {/* task filter, search and create task button */}
-      <div className="px-4 flex items-center justify-between gap-3 border-b border-border py-4 sticky top-18 bg-background ">
+      <div className="px-4 flex items-center justify-between gap-3 border-b border-border py-4 sticky top-17.25 bg-background ">
         <TaskFilter />
 
         {/* search input */}

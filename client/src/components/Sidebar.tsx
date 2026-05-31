@@ -37,7 +37,7 @@ export default function Sidebar() {
         />
       )}
       <section ref={sideBarRef} className={cn("fixed z-50 transition-transform duration-300 h-dvh bg-background md:relative md:translate-x-0 w-64 2xl:w-82 border-r border-border", showSidebar ? "translate-x-0" : "-translate-x-70")}>
-        <div className="text-2xl font-bold flex items-center gap-2 border-b border-border p-4"><NotebookPen size={36} className="rounded-full w-9 h-9 p-2 bg-primary/75 text-white" /><h1 className="flex-1 text-xl lg:text-2xl">Task Manager</h1> <PanelLeftClose className="cursor-pointer text-muted-foreground md:hidden w-6 h-6" onClick={() => setShowSidebar(false)} /></div>
+        <div className="text-2xl font-bold flex items-center gap-2 border-b border-border p-4"><NotebookPen size={36} className="rounded-full w-9 h-9 p-2 bg-primary/75 text-white" /><h1 className="flex-1 text-lg lg:text-xl">Task Manager</h1> <PanelLeftClose className="cursor-pointer text-muted-foreground md:hidden w-6 h-6" onClick={() => setShowSidebar(false)} /></div>
 
         <section className="p-4 flex flex-col justify-between h-[calc(100%-68px)]">
           <nav className="flex flex-col gap-2">

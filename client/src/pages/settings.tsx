@@ -31,7 +31,6 @@ export default function SettingsPage() {
   }, [fetchTasks]);
 
 
-
   // Handle export tasks to PDF
   const handleExportTasks = () => {
     if (tasks.length === 0) {

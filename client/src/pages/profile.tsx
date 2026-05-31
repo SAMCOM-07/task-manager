@@ -102,16 +102,16 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 p-4">
       {/* Header Section */}
-      <div className="bg-linear-to-r from-primary/20 to-primary/5 border border-border rounded-lg p-8">
-        <div className="flex flex-wrap items-center justify-between gap-6">
+      <div className="bg-linear-to-r from-primary/20 to-primary/5 border border-border rounded-lg px-6 p-10">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
               <User size={40} className="text-primary" />
             </div>
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-foreground">{user?.username}</h1>
+              <h1 className="text-xl font-bold text-foreground">{user?.username}</h1>
               <p className="text-sm text-muted-foreground mt-1">
                 Account Profile
               </p>

@@ -68,7 +68,7 @@ const Alert = ({ details }: AlertProps) => {
     <div>
       <div
         className={cn(
-          "z-1000 fixed left-1/2 transform -translate-x-1/2 max-w-md px-4 py-3 rounded-lg border shadow-lg flex items-center gap-3 transition-all duration-500 backdrop-blur-xs",
+          "z-1000 fixed left-1/2 transform -translate-x-1/2 min-w-75 max-w-sm px-4 py-3 rounded-lg border shadow-lg flex items-center gap-3 transition-all duration-500 backdrop-blur-xs",
           styles.container,
           openAlert ? "top-6 opacity-100 pointer-events-auto" : "-top-20 opacity-0 pointer-events-none"
         )}

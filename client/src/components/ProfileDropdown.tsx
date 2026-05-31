@@ -71,7 +71,7 @@ const ProfileDropdown = () => {
             </div> */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-9 h-9 rounded-full text-xl text-white font-medium bg-linear-to-r from-primary to-purple-700 flex items-center justify-center hover:bg-primary/30 transition-colors"
+        className="w-8 h-8 rounded-full text-xl text-white font-medium bg-linear-to-r from-primary to-purple-700 flex items-center justify-center hover:bg-primary/30 transition-colors"
         title={user?.username || "Profile"}
       >
         {user?.username ? user.username.charAt(0).toUpperCase() : <User size={16} className="text-primary" />}
