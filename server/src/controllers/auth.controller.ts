@@ -5,7 +5,11 @@ import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import { sanitizer } from "../utils/sanitizer";
 import { createUserSchema, loginUserSchema } from "../schemas/user.schema";
-import { generateAccessToken, generateRefreshToken } from "../utils/token";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/generateToken";
+import { sendVerificationEmail } from "../emails/sendEmail";
 
 const getRefreshCookieOptions = () => {
   const isProduction = process.env.NODE_ENV === "production";
@@ -63,8 +67,13 @@ export const registerController = async (req: Request, res: Response) => {
 
     const refreshToken = generateRefreshToken(user.id);
 
+    // send verification email
+    await sendVerificationEmail(email, username, user.id);
+
     // store refresh token in cookie
     res.cookie("refreshToken", refreshToken, getRefreshCookieOptions());
+
+    // send verification email
 
     res.status(201).json({
       success: true,
@@ -72,6 +81,8 @@ export const registerController = async (req: Request, res: Response) => {
       message: "User registered successfully",
       user: {
         ...user,
+        verification_token: undefined,
+        verification_token_expires: undefined,
         password: undefined,
       },
     });
@@ -114,6 +125,11 @@ export const loginController = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
 
+    // send verification email if email is not verified
+    if (!user.email_verified) {
+      await sendVerificationEmail(email, user.username, user.id);
+    }
+
     // store refresh token in cookie
     res.cookie("refreshToken", refreshToken, getRefreshCookieOptions());
 
@@ -122,6 +138,8 @@ export const loginController = async (req: Request, res: Response) => {
       user: {
         ...user,
         password: undefined,
+        verification_token: undefined,
+        verification_token_expires: undefined,
       },
       token: accessToken,
       message: "Logged in successfully",
@@ -162,4 +180,76 @@ export const refreshTokenController = async (req: Request, res: Response) => {
 export const logoutController = (req: Request, res: Response) => {
   res.clearCookie("refreshToken", getRefreshCookieOptions());
   res.status(200).json({ success: true, message: "Logged out successfully" });
+};
+
+export const verifyEmailController = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.params;
+
+    if (!token) {
+      return res.status(400).json({
+        message: "Verification token missing",
+      });
+    }
+    const userQuery = `SELECT * FROM users WHERE verification_token = $1 AND verification_token_expires > NOW()`;
+
+    const userResult = await pool.query(userQuery, [token]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({
+        message: "Invalid or expired token",
+      });
+    }
+
+    const user = userResult.rows[0];
+
+    await pool.query(
+      `UPDATE users SET email_verified = true, verification_token = NULL, verification_token_expires = NULL WHERE id = $1`,
+      [user.id],
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// handle resend verification email
+export const resendVerificationEmailController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { email } = req.body;
+    if (!email.trim()) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+    const userQuery = "SELECT * FROM users WHERE email = $1";
+    const userResult = await pool.query(userQuery, [email]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: "Email not registered" });
+    }
+    const user = userResult.rows[0];
+
+    if (user.email_verified) {
+      return res.status(400).json({ error: "Email is already verified" });
+    }
+
+    // send verification email
+    await sendVerificationEmail(email, user.username, user.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Verification email resent successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Server error" });
+  }
 };

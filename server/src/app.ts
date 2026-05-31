@@ -7,31 +7,40 @@ import { taskRouter } from "./routes/task.route";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { userRouter } from "./routes/user.route";
 import { getTaskAIHelp } from "./controllers/ai.controller";
+import { emailMiddleware } from "./middlewares/email.middleware";
+import { globalRateLimiter } from "./middlewares/rate-limits/global.limit";
+import { aiRateLimiter } from "./middlewares/rate-limits/ai.limit";
 
 dotenv.config();
 
 const app = express();
 
-const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
-
 app.use(
   cors({
     origin: [
-      corsOrigin,
-      "https://taskmanager-spa.netlify.app",
+      process.env.FRONTEND_URL as string,
+      "http://localhost:5173",
       "https://taskmanager-spa.vercel.app",
     ],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
   }),
 );
 
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(globalRateLimiter);
 app.use("/api/auth", authRouter);
-app.use("/api/users", authMiddleware, userRouter);
-app.use("/api/tasks", authMiddleware, taskRouter);
-app.post("/api/ai/task-help", authMiddleware, getTaskAIHelp);
+app.use("/api/users", authMiddleware, emailMiddleware, userRouter);
+app.use("/api/tasks", authMiddleware, emailMiddleware, taskRouter);
+app.post(
+  "/api/ai/task-help",
+  authMiddleware,
+  emailMiddleware,
+  aiRateLimiter,
+  getTaskAIHelp,
+);
 
 export default app;

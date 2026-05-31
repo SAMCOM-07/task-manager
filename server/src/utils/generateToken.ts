@@ -15,3 +15,11 @@ export const generateRefreshToken = (userId: string) => {
       .REFRESH_TOKEN_EXPIRES_IN as jwt.SignOptions["expiresIn"],
   });
 };
+
+// utility function to generate verification token
+export const generateVerificationToken = (userId: string) => {
+  return jwt.sign({ userId }, process.env.VERIFICATION_TOKEN_SECRET as string, {
+    expiresIn: process.env
+      .VERIFICATION_TOKEN_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+  });
+};

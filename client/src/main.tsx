@@ -14,6 +14,7 @@ import "./index.css";
 import { TaskProvider } from "./context/AppContext.tsx";
 import LoginPage from "./pages/login.tsx";
 import RegisterPage from "./pages/register.tsx";
+import VerifyEmailPage from "./pages/verifyEmail.tsx";
 import ProfilePage from "./pages/profile.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import RootRedirect from "./layouts/RouteRedirect.tsx";
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/verify-email/:token?",
+    element: <VerifyEmailPage />,
   },
   {
     path: "/",

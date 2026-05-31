@@ -20,6 +20,8 @@ export interface TaskType {
   category: "work" | "education" | "personal" | "career";
 }
 
+export type AlertType = "success" | "error" | "info";
+
 // task context type
 export type TaskContextType = {
   openFormOverlay: boolean;
@@ -34,9 +36,9 @@ export type TaskContextType = {
   setSelectedTask: React.Dispatch<React.SetStateAction<TaskType | null>>;
   openAlert: boolean;
   setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
-  alertDetails: { type: string; message: string };
+  alertDetails: { type: AlertType; message: string };
   setAlertDetails: React.Dispatch<
-    React.SetStateAction<{ type: string; message: string }>
+    React.SetStateAction<{ type: AlertType; message: string }>
   >;
   theme: "light" | "dark";
   setTheme: React.Dispatch<React.SetStateAction<"light" | "dark">>;

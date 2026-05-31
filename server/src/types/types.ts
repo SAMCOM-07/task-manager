@@ -3,6 +3,11 @@ export type User = {
   username: string;
   email: string;
   password: string;
+  verified: boolean;
+  email_verified_at?: Date | null;
+  created_at: Date;
+  updated_at: Date;
+  last_login?: Date | null;
 };
 
 export type RegisterRequestBody = {

@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react"
 import { TaskContext } from "./CreateContext";
-import type { TaskType } from "../types/types";
+import type { AlertType, TaskType } from "../types/types";
 
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
@@ -15,7 +15,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
   const [openAlert, setOpenAlert] = useState(false);
-  const [alertDetails, setAlertDetails] = useState({ type: "", message: "" });
+  const [alertDetails, setAlertDetails] = useState<{ type: AlertType; message: string }>({ type: "info", message: "" });
 
   // Theme state
   const [theme, setTheme] = useState<"light" | "dark">(() => {

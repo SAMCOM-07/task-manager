@@ -26,7 +26,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <section className="">
+    <section className="p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {taskAnalysis.map((item) => (
           <div key={item.subTitle} className={`${item.bgGradient} text-white/80 rounded-lg py-3 px-4 shadow-sm relative`}>

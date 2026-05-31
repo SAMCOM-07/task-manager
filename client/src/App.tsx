@@ -23,9 +23,9 @@ export default function AppLayout() {
       <Sidebar />
       <main className="flex-1 overflow-auto relative">
         <nav className="sticky z-10 inset-0"><Navbar /></nav>
-        <div className="p-4">
-          <Outlet />
-        </div>
+
+        <Outlet />
+
       </main>
     </div>
   );

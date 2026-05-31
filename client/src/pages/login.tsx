@@ -83,6 +83,18 @@ const LoginPage = () => {
 
       const resData = await result.json()
       localStorage.setItem("token", resData.token);
+      localStorage.setItem("pendingVerificationEmail", resData.user.email);
+
+      // If email is not verified, store pending verification email and redirect to verify email page
+      if (!resData?.user?.email_verified) {
+        setAlertDetails({
+          type: "info",
+          message: "Please verify your email to continue.",
+        });
+        setOpenAlert(true);
+        navigate("/verify-email");
+        return;
+      }
 
       setOpenAlert(true);
       setAlertDetails({
@@ -95,13 +107,12 @@ const LoginPage = () => {
         fetchUser();
       }, 300)
 
-
     } catch (err) {
-      console.error("Network Error:", err);
+      console.error("Server Error:", err);
       setOpenAlert(true);
       setAlertDetails({
         type: "error",
-        message: "Network error. Please check your connection and try again.",
+        message: "Server error. Please try again later.",
       });
     } finally {
       setIsLoading(false);

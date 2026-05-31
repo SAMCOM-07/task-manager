@@ -37,7 +37,7 @@ export default function Sidebar() {
         />
       )}
       <section ref={sideBarRef} className={cn("fixed z-50 transition-transform duration-300 h-dvh bg-background md:relative md:translate-x-0 w-64 2xl:w-82 border-r border-border", showSidebar ? "translate-x-0" : "-translate-x-70")}>
-        <h1 className="text-2xl font-bold flex items-center gap-2 border-b border-border p-4"><NotebookPen size={36} className="inline rounded-full p-2 bg-primary/75 text-white" /><span>TaskManager</span> <PanelLeftClose className="mt-1 cursor-pointer text-muted-foreground md:hidden" onClick={() => setShowSidebar(false)} /></h1>
+        <div className="text-2xl font-bold flex items-center gap-2 border-b border-border p-4"><NotebookPen size={36} className="rounded-full w-9 h-9 p-2 bg-primary/75 text-white" /><h1 className="flex-1 text-xl lg:text-2xl">Task Manager</h1> <PanelLeftClose className="cursor-pointer text-muted-foreground md:hidden w-6 h-6" onClick={() => setShowSidebar(false)} /></div>
 
         <section className="p-4 flex flex-col justify-between h-[calc(100%-68px)]">
           <nav className="flex flex-col gap-2">
@@ -80,13 +80,13 @@ export default function Sidebar() {
                   <div className="h-3 w-20 rounded bg-muted-foreground/50" />
                 </div>
               </div>
-            ) : <NavLink onClick={() => setShowSidebar(false)} to={'/profile'} className={'flex items-center gap-3'}>
+            ) : <NavLink onClick={() => setShowSidebar(false)} to={'/profile'} className={'flex items-center gap-2'}>
               <div className="min-w-10 min-h-10 rounded-full font-medium  text-xl bg-linear-to-r from-primary to-purple-600 text-white flex items-center justify-center">
                 {user?.username?.charAt(0) || "U"}
               </div>
-              <h2 className="leading-4 w-full">
+              <h2 className="leading-4 w-full overflow-hidden ">
                 <span className="block font-medium">{user?.username || "User"}</span>
-                <span className="block text-xs mt-0.5 max-w-3/4 truncate text-muted-foreground">{user?.email || "user@example.com"}</span>
+                <span className="block font-medium text-xs mt-0.5 text-muted-foreground">{user?.email || "user@example.com"}</span>
               </h2>
             </NavLink>}
           </div>

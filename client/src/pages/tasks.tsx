@@ -25,7 +25,9 @@ const TaskPage = () => {
 
   return (
     <section className="">
-      <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
+
+      {/* task filter, search and create task button */}
+      <div className="px-4 flex items-center justify-between gap-3 border-b border-border py-4 sticky top-18 bg-background ">
         <TaskFilter />
 
         {/* search input */}
@@ -66,10 +68,12 @@ const TaskPage = () => {
           <span className="hidden sm:block">Create</span> <BadgePlus size={20} />
         </button>
 
-        {/* task list table */}
       </div>
-      <h2 className="mt-6 mb-3 font-medium">Task List</h2>
-      <TasksTable />
+      {/* task list table */}
+      <section className="px-4">
+        <h2 className="mt-6 mb-3 font-medium">Task List</h2>
+        <TasksTable />
+      </section>
     </section>
   );
 };

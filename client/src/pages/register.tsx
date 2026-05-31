@@ -95,26 +95,26 @@ const RegisterPage = () => {
       }
 
       const resData = await result.json()
+
+      // Store the access token in localStorage and pending verification email for later use
       localStorage.setItem("token", resData.token);
+      localStorage.setItem("pendingVerificationEmail", resData.user.email);
 
-      setOpenAlert(true);
+      // Show success alert and redirect to verify email page
       setAlertDetails({
-        type: "success",
-        message: "Account created successfully!",
+        type: "info",
+        message: "Account created! Please check your email to verify your account.",
       });
+      setOpenAlert(true);
 
-      navigate("/");
-
-      setTimeout(() => {
-        fetchUser();
-      }, 300)
+      navigate("/verify-email");
 
     } catch (err) {
-      console.error("Network Error:", err);
+      console.error("Server Error:", err);
       setOpenAlert(true);
       setAlertDetails({
         type: "error",
-        message: "Network error. Please check your connection and try again.",
+        message: "Server error. Please try again later.",
       });
     } finally {
       setIsLoading(false);

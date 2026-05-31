@@ -13,6 +13,7 @@ import type { TaskType } from "../types/types.ts";
 import { API_BASE_URL } from "../config/api.ts";
 import { cn } from "../lib/utils.ts";
 import { authFetch } from "../utils/authFetch.ts";
+import { useTask } from "../hooks/useTask.tsx";
 
 interface AiTaskHelpProps {
   task: TaskType | null;
@@ -29,6 +30,7 @@ export const AiTaskHelp = ({ task, onBack }: AiTaskHelpProps) => {
   const [response, setResponse] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [copied, setCopied] = useState(false);
+  const { setAlertDetails, setOpenAlert } = useTask();
 
   // Memoize task metadata to avoid recalculating on every render
   const taskMeta = useMemo(() => {
@@ -36,10 +38,10 @@ export const AiTaskHelp = ({ task, onBack }: AiTaskHelpProps) => {
     const formattedDueDate = Number.isNaN(dueDate.getTime())
       ? "No due date"
       : dueDate.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        });
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
 
     return {
       formattedDueDate,
@@ -73,7 +75,8 @@ export const AiTaskHelp = ({ task, onBack }: AiTaskHelpProps) => {
         });
 
         if (!res.ok) {
-          throw new Error("Failed to fetch AI help");
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.error || "Failed to fetch AI help");
         }
 
         const data: AIResponse = await res.json();
@@ -92,7 +95,7 @@ export const AiTaskHelp = ({ task, onBack }: AiTaskHelpProps) => {
 
     fetchAIHelp();
     return () => controller.abort();
-  }, [task, refreshKey]);
+  }, [task, refreshKey, setAlertDetails, setOpenAlert]);
 
   // Reset copied state after a short delay
   useEffect(() => {

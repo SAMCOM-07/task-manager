@@ -234,7 +234,7 @@ export default function SettingsPage() {
         setAlertDetails({ type: 'success', message: 'Account deleted successfully. Redirecting...' });
         setOpenAlert(true);
         setTimeout(() => {
-          window.location.href = '/login';
+          window.location.href = '/register';
         }, 1500);
       } else {
         const error = await res.json();
@@ -253,7 +253,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl p-4 mx-auto space-y-6">
       <div className="space-y-1">
         <h1 className="text-3xl font-bold text-foreground">Settings</h1>
         <p className="text-muted-foreground">

@@ -12,6 +12,11 @@
 
     "types": ["node"],
 
+    "jsx": "react-jsx",
+
     "sourceMap": true
   }
 }
+
+
+
