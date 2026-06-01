@@ -1,4 +1,4 @@
-import { Mail, Lock, User, Eye, EyeOff, Loader, ArrowLeft } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Loader, ArrowLeft, User2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -37,6 +37,11 @@ const RegisterPage = () => {
       )
       .min(6, "Username must be at least 6 characters long")
       .max(12, "Username cannot exceed 12 characters"),
+    fullName: z
+      .string()
+      .trim()
+      .min(6, "Full name must be at least 6 characters long")
+      .max(100, "Full name cannot exceed 100 characters"),
     email: z.string().email("Invalid email format").transform((email) => email.toLowerCase()),
     password: z
       .string()
@@ -52,6 +57,7 @@ const RegisterPage = () => {
     const formData = new FormData(e.currentTarget);
     const data = {
       username: formData.get("username") as string,
+      fullName: formData.get("fullName") as string,
       email: formData.get("email") as string,
       password: formData.get("password") as string,
     };
@@ -156,27 +162,53 @@ const RegisterPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
-            {/* Username Field */}
-            <div>
-              <label htmlFor="username" className="form-overlay-label">
-                <div className="flex items-center gap-2">
-                  <User size={16} className="text-primary" />
-                  Username
-                </div>
-              </label>
-              <input
-                id="username"
-                type="text"
-                name="username"
-                placeholder="Your username"
-                className={`form-overlay-input transition-colors ${errors.username
-                  ? "border-destructive focus:ring-destructive"
-                  : "border-border focus:ring-primary"
-                  }`}
-              />
-              {errors.username && (
-                <p className="text-xs text-wrap text-destructive/75 mt-1.5">{errors.username}</p>
-              )}
+            {/* Full Name and Username Fields */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Full Name Field */}
+              <div>
+                <label htmlFor="fullName" className="form-overlay-label">
+                  <div className="flex items-center gap-2">
+                    <User2 size={16} className="text-primary" />
+                    Full Name
+                  </div>
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  name="fullName"
+                  placeholder="Your full name"
+                  className={`form-overlay-input transition-colors ${errors.fullName
+                    ? "border-destructive focus:ring-destructive"
+                    : "border-border focus:ring-primary"
+                    }`}
+                />
+                {errors.fullName && (
+                  <p className="text-xs text-wrap text-destructive/75 mt-1.5">{errors.fullName}</p>
+                )}
+              </div>
+
+              {/* Username Field */}
+              <div>
+                <label htmlFor="username" className="form-overlay-label">
+                  <div className="flex items-center gap-2">
+                    <User size={16} className="text-primary" />
+                    Username
+                  </div>
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  name="username"
+                  placeholder="Your username"
+                  className={`form-overlay-input transition-colors ${errors.username
+                    ? "border-destructive focus:ring-destructive"
+                    : "border-border focus:ring-primary"
+                    }`}
+                />
+                {errors.username && (
+                  <p className="text-xs text-wrap text-destructive/75 mt-1.5">{errors.username}</p>
+                )}
+              </div>
             </div>
 
 

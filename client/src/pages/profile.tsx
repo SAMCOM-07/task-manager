@@ -24,10 +24,10 @@ import { authFetch } from "../utils/authFetch";
 const ProfilePage = () => {
   const { user } = useAuth();
   const { tasks, setAlertDetails, setOpenAlert } = useTask();
-  const [isEditingUsername, setIsEditingUsername] = useState(false);
-  const [editedUsername, setEditedUsername] = useState(user?.username || "");
-  const [loadingUsername, setLoadingUsername] = useState(false);
-  const usernameInputRef = useRef<HTMLInputElement>(null);
+  const [isEditingFullName, setIsEditingFullName] = useState(false);
+  const [editedFullName, setEditedFullName] = useState(user?.full_name || "");
+  const [loadingFullName, setLoadingFullName] = useState(false);
+  const fullNameInputRef = useRef<HTMLInputElement>(null);
   const { fetchUser } = useUser();
   const fetchTasks = useTaskFetch();
 
@@ -46,59 +46,58 @@ const ProfilePage = () => {
     todo: tasks.filter((t) => t.status === "todo").length,
   };
 
-  const handleEditUsername = () => {
-    setIsEditingUsername(true);
-    setTimeout(() => usernameInputRef.current?.focus(), 0);
+  const handleEditFullName = () => {
+    setIsEditingFullName(true);
+    setTimeout(() => fullNameInputRef.current?.focus(), 0);
   };
 
-  const handleSaveUsername = async () => {
-    if (!editedUsername.trim()) {
-      setEditedUsername(user?.username || "");
-      setIsEditingUsername(false);
+  const handleSaveFullName = async () => {
+    if (!editedFullName.trim()) {
+      setEditedFullName(user?.full_name || "");
+      setIsEditingFullName(false);
       return;
     }
 
-    if (editedUsername === user?.username) {
-      setIsEditingUsername(false);
+    if (editedFullName === user?.username) {
+      setIsEditingFullName(false);
       return;
     }
 
     try {
-      setLoadingUsername(true);
+      setLoadingFullName(true);
       const res = await authFetch(`${API_BASE_URL}/api/users/update`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: editedUsername,
+          fullName: editedFullName,
         }),
       });
 
       if (res.ok) {
-        setIsEditingUsername(false);
-        setEditedUsername(user?.username || "");
-        setAlertDetails({ type: 'success', message: 'Username updated successfully!' });
+        setIsEditingFullName(false);
+        setEditedFullName(user?.full_name || "");
+        setAlertDetails({ type: 'success', message: 'Full name updated successfully!' });
         setOpenAlert(true);
         fetchUser(); // Refresh the user data
       } else {
         const response = await res.json();
-        setAlertDetails({ type: 'error', message: response.error.username || 'Failed to update username.' });
+        setAlertDetails({ type: 'error', message: response.error.fullName || 'Failed to update full name.' });
         setOpenAlert(true);
-        console.error("Error updating username:", response.error || response.message);
-        setEditedUsername(user?.username || "");
+        setEditedFullName(user?.full_name || "");
       }
     } catch (error) {
       console.error("Network error:", error);
-      setEditedUsername(user?.username || "");
+      setEditedFullName(user?.full_name || "");
     } finally {
-      setLoadingUsername(false);
+      setLoadingFullName(false);
     }
   };
 
   const handleCancel = () => {
-    setEditedUsername(user?.username || "");
-    setIsEditingUsername(false);
+    setEditedFullName(user?.full_name || "");
+    setIsEditingFullName(false);
   };
 
   return (
@@ -110,11 +109,11 @@ const ProfilePage = () => {
             <div className="w-16 h-16 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
               <User size={40} className="text-primary" />
             </div>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-foreground">{user?.username}</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Account Profile
-              </p>
+            <div className="flex-1 overflow-hidden">
+              <h1 className="text-xl font-bold text-foreground whitespace-nowrap max-w-full truncate capitalize">{user?.full_name}</h1>
+              <h3 className="font-medium text-muted-foreground lowercase">
+                @{user?.username.toLowerCase()}
+              </h3>
             </div>
           </div>
           <LogoutButton />
@@ -123,20 +122,20 @@ const ProfilePage = () => {
 
       {/* Personal Information */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Username Section */}
+        {/* Full Name Section */}
         <div className="bg-card/50 border border-border rounded-lg p-6 space-y-4">
           <div className="flex items-center gap-2 mb-4">
             <User size={20} className="text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Username</h2>
+            <h2 className="text-lg font-semibold text-foreground">Full Name</h2>
           </div>
 
-          {!isEditingUsername ? (
+          {!isEditingFullName ? (
             <div className="flex items-center justify-between">
-              <span className="text-foreground">{user?.username}</span>
+              <span className="text-foreground capitalize">{user?.full_name}</span>
               <button
-                onClick={handleEditUsername}
+                onClick={handleEditFullName}
                 className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
-                title="Edit username"
+                title="Edit full name"
               >
                 <Edit2 size={18} className="text-primary" />
               </button>
@@ -144,24 +143,24 @@ const ProfilePage = () => {
           ) : (
             <div className="space-y-3">
               <input
-                ref={usernameInputRef}
+                ref={fullNameInputRef}
                 type="text"
-                value={editedUsername}
-                onChange={(e) => setEditedUsername(e.target.value)}
+                value={editedFullName}
+                onChange={(e) => setEditedFullName(e.target.value)}
                 className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:border-primary"
               />
               <div className="flex gap-2">
                 <button
-                  onClick={handleSaveUsername}
-                  disabled={loadingUsername}
+                  onClick={handleSaveFullName}
+                  disabled={loadingFullName}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save size={16} />
-                  {loadingUsername ? <div className="loading-spinner"></div> : "Save"}
+                  {loadingFullName ? <div className="loading-spinner"></div> : "Save"}
                 </button>
                 <button
                   onClick={handleCancel}
-                  disabled={loadingUsername}
+                  disabled={loadingFullName}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-background border border-border hover:bg-muted text-foreground rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <X size={16} />

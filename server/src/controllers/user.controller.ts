@@ -16,7 +16,7 @@ export const getCurrentUserController = async (
     }
 
     const userId = req.user?.userId;
-    const userQuery = "SELECT id, username, email FROM users WHERE id = $1";
+    const userQuery = "SELECT id, username, email, full_name FROM users WHERE id = $1";
     const userResult = await pool.query(userQuery, [userId]);
 
     if (userResult.rows.length === 0) {
@@ -50,7 +50,7 @@ export const updateUserDetailsController = async (
   try {
     const userId = req.user?.userId;
 
-    const { username, currentPassword, newPassword } = validatedResult.data;
+    const { fullName, currentPassword, newPassword } = validatedResult.data;
 
     // check if user exists
     const userCheckQuery = "SELECT * FROM users WHERE id = $1";
@@ -66,9 +66,9 @@ export const updateUserDetailsController = async (
     let values: any[] = [];
     let index = 1;
 
-    if (username) {
-      updates.push(`username = $${index}`);
-      values.push(username);
+    if (fullName) {
+      updates.push(`full_name = $${index}`);
+      values.push(fullName);
       index++;
     }
     const currentPasswordMatch = await bcrypt.compare(
@@ -89,7 +89,7 @@ export const updateUserDetailsController = async (
     UPDATE users
     SET ${updates.join(", ")}
     WHERE id = $${index}
-    RETURNING id, username, email
+    RETURNING id, username, email, full_name
   `;
 
     values.push(userId);

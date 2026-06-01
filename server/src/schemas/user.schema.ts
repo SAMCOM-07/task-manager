@@ -11,7 +11,16 @@ export const createUserSchema = z.object({
     )
     .min(6, "Username must be at least 6 characters long")
     .max(12, "Username cannot exceed 12 characters"),
-  email: z.string().email("Invalid email format").transform((email) => email.toLowerCase()),
+  fullName: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(6, "Full name must be at least 6 characters long")
+    .max(50, "Full name cannot exceed 50 characters"),
+  email: z
+    .string()
+    .email("Invalid email format")
+    .transform((email) => email.toLowerCase()),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters long")
@@ -20,7 +29,10 @@ export const createUserSchema = z.object({
 
 // login schema
 export const loginUserSchema = z.object({
-  email: z.string().email("Invalid email format").transform((email) => email.toLowerCase()),
+  email: z
+    .string()
+    .email("Invalid email format")
+    .transform((email) => email.toLowerCase()),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters long")
@@ -31,15 +43,11 @@ export const loginUserSchema = z.object({
 
 export const updateUserSchema = z
   .object({
-    username: z
+    fullName: z
       .string()
       .trim()
-      .regex(
-        /^[a-zA-Z0-9$_-]+$/,
-        "Username can only contain letters, numbers, hyphens, dollar signs, and underscores",
-      )
-      .min(6, "Username must be at least 6 characters long")
-      .max(12, "Username cannot exceed 12 characters")
+      .min(6, "Full name must be at least 6 characters long")
+      .max(50, "Full name cannot exceed 50 characters")
       .optional(),
     currentPassword: z
       .string()
@@ -52,7 +60,7 @@ export const updateUserSchema = z
       .max(25, "Password cannot exceed 25 characters")
       .optional(),
   })
-  .refine((data) => data.username || data.currentPassword || data.newPassword, {
+  .refine((data) => data.fullName || data.currentPassword || data.newPassword, {
     message:
-      "At least one of username, currentPassword, or newPassword must be provided",
+      "At least one of fullName, currentPassword, or newPassword must be provided",
   });

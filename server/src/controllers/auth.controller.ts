@@ -24,7 +24,13 @@ const getRefreshCookieOptions = () => {
 
 // handle register
 export const registerController = async (req: Request, res: Response) => {
-  const data = sanitizer(req.body);
+  let data = sanitizer(req.body);
+  data = {
+    ...data,
+    username: data.username?.toLowerCase(),
+    email: data.email?.toLowerCase(),
+    fullName: data.fullName?.toLowerCase(),
+  };
 
   const validationResult = createUserSchema.safeParse(data);
 
@@ -35,7 +41,7 @@ export const registerController = async (req: Request, res: Response) => {
   }
 
   try {
-    const { password, email, username } = validationResult.data;
+    const { password, email, username, fullName } = validationResult.data;
     const hashedPassword = (await bcrypt.hash(password, 10)) as string;
     const id = randomUUID();
 
@@ -58,8 +64,8 @@ export const registerController = async (req: Request, res: Response) => {
     }
 
     const insertQuery =
-      "INSERT INTO users (id, username, email, password) VALUES ($1, $2, $3, $4) RETURNING id, username, email";
-    const values = [id, username, email, hashedPassword];
+      "INSERT INTO users (id, username, email, password, full_name) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, email, full_name";
+    const values = [id, username, email, hashedPassword, fullName];
     const result = await pool.query(insertQuery, values);
     const user = result.rows[0];
 
@@ -93,7 +99,11 @@ export const registerController = async (req: Request, res: Response) => {
 
 // handle login
 export const loginController = async (req: Request, res: Response) => {
-  const data = sanitizer(req.body);
+  let data = sanitizer(req.body);
+  data = {
+    ...data,
+    email: data.email?.toLowerCase(),
+  };
 
   const validationResult = loginUserSchema.safeParse(data);
 

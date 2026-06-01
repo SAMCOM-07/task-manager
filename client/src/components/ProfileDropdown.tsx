@@ -74,17 +74,17 @@ const ProfileDropdown = () => {
         className="w-8 h-8 rounded-full text-xl text-white font-medium bg-linear-to-r from-primary to-purple-700 flex items-center justify-center hover:bg-primary/30 transition-colors"
         title={user?.username || "Profile"}
       >
-        {user?.username ? user.username.charAt(0).toUpperCase() : <User size={16} className="text-primary" />}
+        {user?.full_name ? user.full_name.charAt(0).toUpperCase() : <User size={16} className="text-primary" />}
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg overflow-hidden">
+        <div className="absolute right-0 mt-2 w-42 bg-card border border-border rounded-lg shadow-lg overflow-hidden">
           {/* Header with username */}
           <div className="px-4 py-3 border-b border-border bg-background/50">
             <p className="text-sm text-muted-foreground">Logged in as</p>
             <p className="text-sm font-semibold text-foreground truncate">
-              {user?.username}
+              {user?.full_name || user?.username || "User"}
             </p>
           </div>
 
