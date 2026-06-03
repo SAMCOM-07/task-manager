@@ -48,19 +48,9 @@ export const updateUserSchema = z
       .trim()
       .min(6, "Full name must be at least 6 characters long")
       .max(50, "Full name cannot exceed 50 characters")
-      .optional(),
-    currentPassword: z
-      .string()
-      .min(6, "Password must be at least 6 characters long")
-      .max(25, "Password cannot exceed 25 characters")
-      .optional(),
-    newPassword: z
-      .string()
-      .min(6, "Password must be at least 6 characters long")
-      .max(25, "Password cannot exceed 25 characters")
+      .transform((name) => name.toLowerCase())
       .optional(),
   })
-  .refine((data) => data.fullName || data.currentPassword || data.newPassword, {
-    message:
-      "At least one of fullName, currentPassword, or newPassword must be provided",
+  .refine((data) => data.fullName, {
+    message: "Full name must be provided",
   });

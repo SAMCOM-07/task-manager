@@ -17,9 +17,21 @@ export const generateRefreshToken = (userId: string) => {
 };
 
 // utility function to generate verification token
-export const generateVerificationToken = (userId: string) => {
+export const generateEmailVerificationToken = (userId: string) => {
   return jwt.sign({ userId }, process.env.VERIFICATION_TOKEN_SECRET as string, {
     expiresIn: process.env
       .VERIFICATION_TOKEN_EXPIRES_IN as jwt.SignOptions["expiresIn"],
   });
+};
+
+// utility function to generate password reset token
+export const generatePasswordResetToken = (userId: string) => {
+  return jwt.sign(
+    { userId },
+    process.env.PASSWORD_RESET_TOKEN_SECRET as string,
+    {
+      expiresIn: process.env
+        .PASSWORD_RESET_TOKEN_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+    },
+  );
 };

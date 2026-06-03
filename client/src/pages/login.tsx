@@ -83,10 +83,10 @@ const LoginPage = () => {
 
       const resData = await result.json()
       localStorage.setItem("token", resData.token);
-      localStorage.setItem("pendingVerificationEmail", resData.user.email);
 
       // If email is not verified, store pending verification email and redirect to verify email page
       if (!resData?.user?.email_verified) {
+        localStorage.setItem("pendingVerificationEmail", resData.user.email);
         setAlertDetails({
           type: "info",
           message: "Please verify your email to continue.",
@@ -141,10 +141,10 @@ const LoginPage = () => {
         <div className="p-6 bg-linear-to-br from-primary/10 via-accent/5 to-transparent border-b border-border">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
-              Log in to continue
+              Welcome Back !
             </h1>
             <p className="text-sm text-muted-foreground">
-              Welcome back! Please enter your details
+              Please enter your details
             </p>
           </div>
         </div>
@@ -179,12 +179,20 @@ const LoginPage = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="form-overlay-label">
-                <div className="flex items-center gap-2">
-                  <Lock size={16} className="text-primary" />
-                  Password
-                </div>
-              </label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="form-overlay-label">
+                  <div className="flex items-center gap-2">
+                    <Lock size={16} className="text-primary" />
+                    Password
+                  </div>
+                </label>
+                <Link
+                  to="/reset-password"
+                  className="inline-block text-xs hover:underline text-primary transition-colors font-medium"
+                >
+                  RESET PASSWORD
+                </Link>
+              </div>
               <div className="relative">
                 <input
                   id="password"

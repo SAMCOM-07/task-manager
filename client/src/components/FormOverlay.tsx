@@ -207,6 +207,7 @@ const FormOverlay = () => {
                   defaultValue={editDetails?.due_date ? new Date(editDetails.due_date).toISOString().split('T')[0] : undefined}
                   name="due_date"
                   className="form-overlay-input"
+                  placeholder="mm/dd/yyyy"
                 />
                 {errors.due_date && <span className="text-destructive/70 text-sm">{errors.due_date}</span>}
               </label>

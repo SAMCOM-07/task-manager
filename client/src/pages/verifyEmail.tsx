@@ -38,6 +38,7 @@ const VerifyEmailPage = () => {
   // Resend states
   const [resendState, setResendState] = useState<ResendState>("idle");
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
+  const [linkExpirySeconds, setLinkExpirySeconds] = useState(0);
 
 
   // Initialize email from localStorage
@@ -49,10 +50,14 @@ const VerifyEmailPage = () => {
           email: pendingEmail,
           maskedEmail: maskEmail(pendingEmail),
         });
+        // Start 5-minute countdown when email is initially sent
+        setLinkExpirySeconds(300);
+      } else{
+        navigate("/register");
       }
     }
     setInfo();
-  }, []);
+  }, [navigate]);
 
   // Auto-verify email if token is in URL
   useEffect(() => {
@@ -127,6 +132,22 @@ const VerifyEmailPage = () => {
     return () => clearInterval(interval);
   }, [resendState]);
 
+  // Handle link expiry timer (5 minutes)
+  useEffect(() => {
+    if (linkExpirySeconds <= 0) return;
+
+    const interval = setInterval(() => {
+      setLinkExpirySeconds((prev) => {
+        if (prev <= 1) {
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [linkExpirySeconds]);
+
 
   // Handle email resend
   const handleEmailResend = useCallback(async () => {
@@ -175,6 +196,9 @@ const VerifyEmailPage = () => {
       setTimeout(() => {
         setResendState("cooldown");
       }, 500);
+
+      // Start 5-minute expiry countdown
+      setLinkExpirySeconds(300);
     } catch (err) {
       console.error("Resend error:", err);
       setResendState("idle");
@@ -343,12 +367,60 @@ const VerifyEmailPage = () => {
             )}
           </div>
 
-          {/* Footer */}
-          <div className="px-8 py-4 bg-muted/30 border-t border-border text-center text-xs text-muted-foreground">
-            {verificationState === "success"
-              ? "✓ Your account is fully activated and ready to use."
-              : "🔒 Verification links expire in 5 minutes. Don't share them."}
-          </div>
+          {/* Footer with Countdown Timer */}
+          {verificationState === "success" ? (
+            <div className="px-8 py-4 bg-green/10 border-t border-green/20 text-center">
+              <p className="text-xs text-green font-medium">✓ Your account is fully activated and ready to use.</p>
+            </div>
+          ) : (
+            <div className="px-8 py-6 bg-linear-to-r from-primary/5 via-transparent to-accent/5 border-t border-border">
+              {linkExpirySeconds > 0 ? (
+                <div className="space-y-3">
+                  {/* Countdown Display */}
+                  <div className="text-center">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <Clock size={16} className={linkExpirySeconds <= 60 ? "text-destructive animate-pulse" : "text-muted-foreground"} />
+                      <span className={`font-mono font-bold text-lg ${
+                        linkExpirySeconds <= 60 ? "text-destructive" : "text-foreground"
+                      }`}>
+                        {Math.floor(linkExpirySeconds / 60)}:{String(linkExpirySeconds % 60).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <p className={`text-xs ${linkExpirySeconds <= 60 ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                      Verification link expires in
+                    </p>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-1000 ${
+                        linkExpirySeconds <= 60
+                          ? "bg-destructive"
+                          : linkExpirySeconds <= 120
+                            ? "bg-orange"
+                            : "bg-linear-to-r from-primary to-accent"
+                      }`}
+                      style={{
+                        width: `${(linkExpirySeconds / 300) * 100}%`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Warning Message */}
+                  {linkExpirySeconds <= 60 && (
+                    <p className="text-xs text-destructive font-medium text-center animate-pulse">
+                      ⚠️ Hurry! Link expires soon. Verify now!
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center">
+                  <p className="text-xs text-muted-foreground">🔒 Verification link has expired. Please request a new one.</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Security Note */}

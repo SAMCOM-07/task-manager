@@ -30,8 +30,9 @@ A modern, feature-rich task management dashboard built as a Single Page Applicat
 
 ### User Management
 - 👤 **User Profiles** — Manage profile information and preferences
-- 🔐 **Authentication** — Secure login/register with JWT tokens
-- 🔑 **Password Management** — Change password and account security
+- 🔐 **Authentication** — Secure login/register with JWT tokens and bcrypt hashing
+- ✉️ **Email Verification** — Verify email addresses during registration with confirmation links
+- 🔑 **Password Management** — Change password, reset forgot passwords, and account security
 - 🗑️ **Account Controls** — Delete account and clear all tasks
 
 ### UI / UX
@@ -78,7 +79,7 @@ A modern, feature-rich task management dashboard built as a Single Page Applicat
 | **Authentication** | JWT + bcrypt |
 | **AI Integration** | OpenAI (GPT-4o-mini via OpenRouter) |
 | **Validation** | Zod |
-| **Security** | CORS · Cookie Parser · Sanitize HTML |
+| **Security** | CORS · Cookie Parser · Sanitize HTML · Rate Limiting |
 
 ---
 
@@ -308,6 +309,17 @@ pnpm start     # Run compiled server
 2. Add `OPENROUTER_API_KEY` to your server `.env` file
 3. Click "Ask AI for Help" button in any task details modal
 4. AI analyzes task title and description to provide smart insights
+
+### Security & Rate Limiting
+- **Email Verification** — New users must verify email before accessing features
+- **Password Reset** — Secure password reset flow with email verification
+- **Rate Limiting** — Endpoint-specific rate limiting to prevent abuse:
+  - Authentication endpoints (login/register): Limited requests per hour
+  - Task endpoints: Throttled for database protection
+  - AI endpoints: Limited to prevent excessive API usage
+  - Global rate limiting as fallback
+- **Input Sanitization** — HTML sanitization to prevent XSS attacks
+- **JWT Expiration** — Secure token expiration and refresh mechanisms
 
 ---
 

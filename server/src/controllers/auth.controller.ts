@@ -7,9 +7,13 @@ import { sanitizer } from "../utils/sanitizer";
 import { createUserSchema, loginUserSchema } from "../schemas/user.schema";
 import {
   generateAccessToken,
+  generatePasswordResetToken,
   generateRefreshToken,
 } from "../utils/generateToken";
-import { sendVerificationEmail } from "../emails/sendEmail";
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from "../emails/sendEmail";
 
 const getRefreshCookieOptions = () => {
   const isProduction = process.env.NODE_ENV === "production";
@@ -74,7 +78,7 @@ export const registerController = async (req: Request, res: Response) => {
     const refreshToken = generateRefreshToken(user.id);
 
     // send verification email
-    await sendVerificationEmail(email, username, user.id);
+    await sendVerificationEmail(email, fullName, user.id);
 
     // store refresh token in cookie
     res.cookie("refreshToken", refreshToken, getRefreshCookieOptions());
@@ -135,13 +139,13 @@ export const loginController = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
 
-    // send verification email if email is not verified
-    if (!user.email_verified) {
-      await sendVerificationEmail(email, user.username, user.id);
-    }
-
     // store refresh token in cookie
     res.cookie("refreshToken", refreshToken, getRefreshCookieOptions());
+
+    // send verification email if email is not verified
+    if (!user.email_verified) {
+      await sendVerificationEmail(email, user.full_name, user.id);
+    }
 
     res.status(200).json({
       success: true,
@@ -192,6 +196,7 @@ export const logoutController = (req: Request, res: Response) => {
   res.status(200).json({ success: true, message: "Logged out successfully" });
 };
 
+// handle email verification
 export const verifyEmailController = async (req: Request, res: Response) => {
   try {
     const { token } = req.params;
@@ -248,15 +253,95 @@ export const resendVerificationEmailController = async (
     const user = userResult.rows[0];
 
     if (user.email_verified) {
-      return res.status(400).json({ error: "Email is already verified" });
+      return res
+        .status(400)
+        .json({ error: "Email is already verified, please log in" });
     }
 
     // send verification email
-    await sendVerificationEmail(email, user.username, user.id);
+    await sendVerificationEmail(email, user.full_name, user.id);
 
     return res.status(200).json({
       success: true,
       message: "Verification email resent successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+// handle forgot password
+export const getPasswordResetEmailController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { email } = req.body;
+
+    if (!email || !email.trim()) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    const userQuery = "SELECT * FROM users WHERE email = $1";
+    const userResult = await pool.query(userQuery, [email.toLowerCase()]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: "Email not registered" });
+    }
+
+    const user = userResult.rows[0];
+
+    // Send password reset email
+    await sendPasswordResetEmail(email, user.full_name, user.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset email sent successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: "Server error, please try again later" });
+  }
+};
+
+// handle reset password
+export const resetPasswordController = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ error: "Reset token missing" });
+    }
+
+    if (!password || password.length < 6) {
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 6 characters" });
+    }
+
+    const userQuery = `SELECT * FROM users WHERE password_reset_token = $1 AND password_reset_token_expires > NOW()`;
+    const userResult = await pool.query(userQuery, [token]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: "Invalid or expired reset token" });
+    }
+
+    const user = userResult.rows[0];
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user password and clear reset token
+    await pool.query(
+      `UPDATE users SET password = $1, password_reset_token = NULL, password_reset_token_expires = NULL WHERE id = $2`,
+      [hashedPassword, user.id],
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
     });
   } catch (error) {
     console.log(error);

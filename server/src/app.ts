@@ -20,7 +20,6 @@ app.use(
     origin: [
       process.env.FRONTEND_URL as string,
       "http://localhost:5173",
-      "https://taskmanager-spa.vercel.app",
     ],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],

@@ -7,6 +7,8 @@ import {
   RefreshCcw,
   Sparkles,
   Zap,
+  Copy,
+  Check
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import type { TaskType } from "../types/types.ts";
@@ -244,7 +246,7 @@ export const AiTaskHelp = ({ task, onBack }: AiTaskHelpProps) => {
                 onClick={handleCopyResponse}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted"
               >
-                {copied ? "Copied" : "Copy response"}
+                {copied ? "Copied" : "Copy"}{copied ? <Check size={14} className="text-green" /> : <Copy size={14} />}
               </button>
             </div>
             <div className="max-w-none text-sm leading-relaxed text-foreground/90">

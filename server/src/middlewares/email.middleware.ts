@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { pool } from "../db/pool";
 import { AuthenticatedRequest } from "./auth.middleware";
 

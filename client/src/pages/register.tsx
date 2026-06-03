@@ -205,6 +205,7 @@ const RegisterPage = () => {
                     : "border-border focus:ring-primary"
                     }`}
                 />
+
                 {errors.username && (
                   <p className="text-xs text-wrap text-destructive/75 mt-1.5">{errors.username}</p>
                 )}

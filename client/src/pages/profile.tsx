@@ -55,11 +55,15 @@ const ProfilePage = () => {
     if (!editedFullName.trim()) {
       setEditedFullName(user?.full_name || "");
       setIsEditingFullName(false);
+      setAlertDetails({ type: 'error', message: 'Full name cannot be empty.' });
+      setOpenAlert(true);
       return;
     }
 
     if (editedFullName === user?.username) {
       setIsEditingFullName(false);
+      setAlertDetails({ type: 'error', message: 'Full name cannot be the same as username.' });
+      setOpenAlert(true);
       return;
     }
 
@@ -82,7 +86,7 @@ const ProfilePage = () => {
         setOpenAlert(true);
         fetchUser(); // Refresh the user data
       } else {
-        const response = await res.json();
+        const response = await res.json().catch(() => ({}));
         setAlertDetails({ type: 'error', message: response.error.fullName || 'Failed to update full name.' });
         setOpenAlert(true);
         setEditedFullName(user?.full_name || "");
@@ -111,7 +115,7 @@ const ProfilePage = () => {
             </div>
             <div className="flex-1 overflow-hidden">
               <h1 className="text-xl font-bold text-foreground whitespace-nowrap max-w-full truncate capitalize">{user?.full_name}</h1>
-              <h3 className="font-medium text-muted-foreground lowercase">
+              <h3 className="text-muted-foreground lowercase">
                 @{user?.username.toLowerCase()}
               </h3>
             </div>

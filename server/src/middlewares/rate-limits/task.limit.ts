@@ -32,3 +32,15 @@ export const taskDeletionRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+// clear all tasks rate limiter
+
+export const clearAllTasksRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: {
+    error: "Too many attempts, please try again after 15 minutes.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

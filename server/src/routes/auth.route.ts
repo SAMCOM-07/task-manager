@@ -6,6 +6,8 @@ import {
   registerController,
   resendVerificationEmailController,
   verifyEmailController,
+  getPasswordResetEmailController,
+  resetPasswordController,
 } from "../controllers/auth.controller";
 import {
   authRateLimiter,
@@ -28,4 +30,14 @@ authRouter.post(
   "/resend-verification-email",
   resendVerificationEmailRateLimiter,
   resendVerificationEmailController,
+);
+authRouter.post(
+  "/password-reset-email",
+  authRateLimiter,
+  getPasswordResetEmailController,
+);
+authRouter.post(
+  "/reset-password/:token",
+  authRateLimiter,
+  resetPasswordController,
 );

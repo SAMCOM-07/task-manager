@@ -194,7 +194,7 @@ export default function SettingsPage() {
         passwordFormRef.current?.reset();
         console.log(res)
       } else {
-        const error = await res.json();
+        const error = await res.json().catch(() => ({}));
         setAlertDetails({ type: 'error', message: error.error || 'Failed to change password.' });
         setOpenAlert(true);
       }
@@ -236,7 +236,7 @@ export default function SettingsPage() {
           window.location.href = '/register';
         }, 1500);
       } else {
-        const error = await res.json();
+        const error = await res.json().catch(() => ({}));
         setAlertDetails({ type: 'error', message: error.error || 'Failed to delete account.' });
         setOpenAlert(true);
       }

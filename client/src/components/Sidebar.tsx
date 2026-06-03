@@ -82,10 +82,10 @@ export default function Sidebar() {
               </div>
             ) : <NavLink onClick={() => setShowSidebar(false)} to={'/profile'} className={'flex items-center gap-2'}>
               <div className="min-w-10 min-h-10 rounded-full font-medium  text-xl bg-linear-to-r from-primary to-purple-600 text-white flex items-center justify-center">
-                {user?.username?.charAt(0) || "U"}
+                {user?.full_name?.charAt(0).toUpperCase() || "U"}
               </div>
               <h2 className="leading-4 w-full overflow-hidden ">
-                <span className="block font-medium">{user?.username || "User"}</span>
+                <span className="block font-medium capitalize">{user?.full_name.split(' ').splice(0, 2).join(' ') || "User"}</span>
                 <span className="block font-medium text-xs mt-0.5 text-muted-foreground">{user?.email || "user@example.com"}</span>
               </h2>
             </NavLink>}

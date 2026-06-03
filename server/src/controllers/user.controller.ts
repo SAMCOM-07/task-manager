@@ -16,7 +16,8 @@ export const getCurrentUserController = async (
     }
 
     const userId = req.user?.userId;
-    const userQuery = "SELECT id, username, email, full_name FROM users WHERE id = $1";
+    const userQuery =
+      "SELECT id, username, email, full_name FROM users WHERE id = $1";
     const userResult = await pool.query(userQuery, [userId]);
 
     if (userResult.rows.length === 0) {
@@ -50,7 +51,11 @@ export const updateUserDetailsController = async (
   try {
     const userId = req.user?.userId;
 
-    const { fullName, currentPassword, newPassword } = validatedResult.data;
+    const { fullName } = validatedResult.data;
+
+    if (!fullName) {
+      return res.status(400).json({ error: "Full name is required" });
+    }
 
     // check if user exists
     const userCheckQuery = "SELECT * FROM users WHERE id = $1";
@@ -62,38 +67,9 @@ export const updateUserDetailsController = async (
       return res.status(404).json({ error: "User not found" });
     }
 
-    let updates: string[] = [];
-    let values: any[] = [];
-    let index = 1;
-
-    if (fullName) {
-      updates.push(`full_name = $${index}`);
-      values.push(fullName);
-      index++;
-    }
-    const currentPasswordMatch = await bcrypt.compare(
-      currentPassword || "",
-      userCheckResult.rows[0].password,
-    );
-    if (newPassword) {
-      if (!currentPasswordMatch) {
-        return res.status(400).json({ error: "Current password is incorrect" });
-      }
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      updates.push(`password = $${index}`);
-      values.push(hashedPassword);
-      index++;
-    }
-
-    const query = `
-    UPDATE users
-    SET ${updates.join(", ")}
-    WHERE id = $${index}
-    RETURNING id, username, email, full_name
+    const query = `UPDATE users SET full_name = COALESCE($1, full_name) WHERE id = $2 RETURNING id, username, email, full_name
   `;
-
-    values.push(userId);
-
+    const values = [fullName.toLowerCase(), userId];
     const result = await pool.query(query, values);
 
     res.json({

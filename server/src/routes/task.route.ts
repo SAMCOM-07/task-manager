@@ -6,11 +6,17 @@ import {
   readTasksController,
   updateTaskController,
 } from "../controllers/task.controller";
+import {
+  clearAllTasksRateLimiter,
+  taskCreationRateLimiter,
+  taskDeletionRateLimiter,
+  taskUpdateRateLimiter,
+} from "../middlewares/rate-limits/task.limit";
 
 export const taskRouter = express.Router();
 
-taskRouter.post("/create", createTaskController);
+taskRouter.post("/create", taskCreationRateLimiter, createTaskController);
 taskRouter.get("/read", readTasksController);
-taskRouter.patch("/update/:id", updateTaskController);
-taskRouter.delete("/delete/:id", deleteTaskController);
-taskRouter.delete("/clear", clearAllTasksController);
+taskRouter.patch("/update/:id", taskUpdateRateLimiter, updateTaskController);
+taskRouter.delete("/delete/:id", taskDeletionRateLimiter, deleteTaskController);
+taskRouter.delete("/clear", clearAllTasksRateLimiter, clearAllTasksController);

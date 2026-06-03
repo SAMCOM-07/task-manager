@@ -65,10 +65,6 @@ const ProfileDropdown = () => {
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Profile Button */}
-
-      {/* <div className="w-10 h-10 rounded-full font-medium  text-xl bg-linear-to-r from-primary to-purple-600 text-white flex items-center justify-center">
-              {user?.username?.charAt(0) || "U"}
-            </div> */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-8 h-8 rounded-full text-xl text-white font-medium bg-linear-to-r from-primary to-purple-700 flex items-center justify-center hover:bg-primary/30 transition-colors"
@@ -84,7 +80,7 @@ const ProfileDropdown = () => {
           <div className="px-4 py-3 border-b border-border bg-background/50">
             <p className="text-sm text-muted-foreground">Logged in as</p>
             <p className="text-sm font-semibold text-foreground truncate">
-              {user?.full_name || user?.username || "User"}
+              {user?.username || "User"}
             </p>
           </div>
 

@@ -3,7 +3,7 @@ import { useTask } from "../hooks/useTask";
 
 
 export default function TaskPieChart() {
-  const { tasks } = useTask()
+  const { tasks, loadingTasks } = useTask()
 
   const data = [
     { name: "In Progress", value: tasks && tasks.filter(task => task.status === 'in_progress').length || 0, fill: "#f59e0b" },
@@ -14,7 +14,11 @@ export default function TaskPieChart() {
 
   return (
     <div className="w-full h-100 outline-none">
-      {tasks && tasks.length === 0 ? (
+      {loadingTasks ? (
+        <div className="flex items-center justify-center h-full text-gray-500">
+          Loading . . .
+        </div>
+      ) : tasks && tasks.length === 0 ? (
         <div className="flex items-center justify-center h-full text-gray-500">
           No tasks to display
         </div>

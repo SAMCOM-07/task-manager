@@ -8,7 +8,7 @@ import { useTaskFetch } from "../hooks/useTaskFetch";
 
 export default function DashboardPage() {
 
-  const { tasks, loadingTasks } = useTask();
+  const { tasks, loadingTasks, setSelectedTask, setOpenDetailsModal } = useTask();
 
   const fetchTasks = useTaskFetch();
 
@@ -79,7 +79,10 @@ export default function DashboardPage() {
             ) : tasks && tasks.length > 0 ? [...tasks].reverse().slice(0, 4).map((task) => {
               const overdue = new Date(task.due_date) < new Date() && task.status !== 'completed';
               return (
-                <div key={task.id} className="border border-border rounded-md p-4 hover:bg-accent/30 transition-colors flex items-center justify-between gap-2">
+                <div onClick={() => {
+                  setSelectedTask(task);
+                  setOpenDetailsModal(true);
+                }} key={task.id} className="cursor-pointer border border-border rounded-md p-4 hover:bg-accent/30 transition-colors flex items-center justify-between gap-2">
                   <div className="space-y-2">
                     <h4 className="font-semibold">{task.title}</h4>
                     <p className="text-sm text-muted-foreground line-clamp-2 max-w-[80%] leading-3.5">{task.description}</p>
